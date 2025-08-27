@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LPD - Semana 02: Lógica Condicional</title>
+    <!-- Incluyendo Tailwind CSS desde CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Incluyendo Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilo personalizado para usar la fuente Inter */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Estilo para los bloques de código */
+        .code-block {
+            background-color: #2d3748; /* gray-800 */
+            color: #e2e8f0; /* gray-300 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <!-- Contenedor Principal -->
+    <div class="container mx-auto p-4 sm:p-6 md:p-8">
+
+        <!-- Cabecera -->
+        <header class="bg-white shadow-md rounded-lg p-6 mb-8">
+            <h1 class="text-3xl font-bold text-blue-700">Lenguaje de Programación Distribuida</h1>
+            <p class="text-xl text-gray-600 mt-1">Semana 02: ¡Dando Inteligencia a tus Aplicaciones!</p>
+        </header>
+
+        <!-- Contenido Principal -->
+        <main class="space-y-8">
+
+            <!-- Sección de Bienvenida -->
+            <section class="bg-white p-6 rounded-lg shadow">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">¡Hola de nuevo, creador de software!</h2>
+                <p class="text-lg">
+                    La semana pasada aprendimos a recibir información. Hoy, vamos a darles un cerebro a nuestras aplicaciones. Aprenderás a programar la capacidad de <strong>tomar decisiones</strong>, haciendo que tus programas sean mucho más interactivos y útiles.
+                </p>
+            </section>
+
+            <!-- Sección Marco Teórico -->
+            <section class="bg-white p-6 rounded-lg shadow">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">1. Marco Teórico: El Arte de Decidir</h2>
+                
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="text-xl font-semibold text-blue-600">a. Ofreciendo Opciones: RadioButton y CheckBox</h3>
+                        <p class="mt-2">
+                           Para que el usuario elija de opciones predefinidas, usamos:
+                        </p>
+                        <ul class="list-disc list-inside mt-2 pl-4 space-y-2">
+                            <li><strong>RadioButton:</strong> Para seleccionar <strong>una sola opción</strong> de un grupo (como en un examen de opción múltiple). Se agrupan con un `GroupBox`.</li>
+                            <li><strong>CheckBox:</strong> Para seleccionar <strong>cero, una o varias opciones</strong> (como los ingredientes de una pizza).</li>
+                        </ul>
+                        <p class="mt-2">Ambos controles tienen una propiedad clave: <code>.Checked</code>, que es <code>true</code> si está seleccionado y <code>false</code> si no lo está.</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl font-semibold text-blue-600">b. El Cerebro del Programa: La Estructura if-else</h3>
+                        <p class="mt-2">
+                            Permite que tu código ejecute diferentes bloques de instrucciones según una condición. Es la base de la lógica en programación.
+                        </p>
+                        <pre class="code-block mt-2"><code>// La estructura if-else if-else evalúa múltiples condiciones en orden.
+if (nota >= 18)
+{
+    // Código si la nota es excelente.
+}
+else if (nota >= 13)
+{
+    // Código si la nota es aprobatoria pero no excelente.
+}
+else
+{
+    // Código si la nota es desaprobatoria.
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección Actividad de Aprendizaje -->
+            <section class="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-lg shadow">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">2. Actividad de Aprendizaje N° 02</h2>
+                <div class="space-y-4">
+                    <div>
+                        <h3 class="text-xl font-semibold">Ejercicio: Configurador de Pedidos de Pizza</h3>
+                        <p>Crea una aplicación que permita al usuario elegir el tamaño de una pizza (usando `RadioButtons`) y agregar ingredientes extra (usando `CheckBoxes`). Un botón debe calcular y mostrar el precio total del pedido basándose en las selecciones del usuario.</p>
+                        <p class="mt-2 text-sm text-gray-700"><strong>Pista:</strong> Necesitarás una variable `double` para ir acumulando el precio y varias sentencias `if` para tomar las decisiones.</p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Navegación -->
+        <footer class="mt-8">
+            <div class="flex justify-between items-center bg-white p-4 rounded-lg shadow">
+                <a href="semana-01.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300">
+                    &larr; Anterior
+                </a>
+                <span class="text-gray-600">Semana 2 de 18</span>
+                <a href="semana-03.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300">
+                    Siguiente &rarr;
+                </a>
+            </div>
+             <div class="text-center mt-4 text-sm text-gray-500">
+                <p>Instituto de Educación Superior Tecnológico Público "Carlos Salazar Romero"</p>
+            </div>
+        </footer>
+    </div>
+
+</body>
+</html>
