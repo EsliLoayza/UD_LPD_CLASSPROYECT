@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LPD - Semana 12: Estudio de Diseño Digital</title>
+    <!-- Incluyendo Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Incluyendo Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Incluyendo Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Fira+Code&family=Exo+2:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #1a1a2e; color: #e0e0e0;}
+        .exo-title { font-family: 'Exo-2', sans-serif; }
+        .code-block { background-color: #161625; border: 1px solid #3a3a5e; border-radius: 0.5rem; font-family: 'Fira-Code', monospace; padding: 1rem; font-size: 0.875rem; line-height: 1.6; white-space: pre-wrap; transition: all 0.3s; }
+        .req-text span { cursor: pointer; transition: background-color 0.2s; }
+        .req-text span:hover { background-color: rgba(255, 255, 255, 0.1); }
+        .req-text span.selected { background-color: #e94560; color: white; border-radius: 3px; }
+        .class-box { background-color: #1f1f3a; border: 2px solid #4a4a7a; border-radius: 8px; padding: 1rem; transition: all 0.3s; }
+        .class-box input { background-color: #161625; border: 1px solid #3a3a5e; color: #e0e0e0; border-radius: 4px; padding: 4px 8px; }
+        .step-title { border-bottom: 2px solid #e94560; padding-bottom: 8px; }
+        .tab-button { transition: all 0.2s; }
+        .tab-button.active { background-color: #e94560; color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Contenedor Principal -->
+    <div class="container mx-auto p-4 sm:p-6 md:p-8">
+
+        <!-- Cabecera -->
+        <header class="bg-gradient-to-r from-[#1f1f3a] to-[#161625] border-2 border-[#e94560] shadow-2xl shadow-[#e94560]/20 rounded-lg p-8 mb-8 text-center">
+            <i class="fas fa-pencil-ruler text-5xl mb-4 text-[#e94560]"></i>
+            <h1 class="text-5xl font-bold exo-title text-white">Semana 12: Estudio de Diseño Digital</h1>
+            <p class="text-xl mt-2 text-gray-400">De los Requisitos al Código: Diseña, Genera e Implementa.</p>
+        </header>
+
+        <!-- Estudio de Diseño Interactivo -->
+        <main class="bg-[#1f1f3a] p-6 rounded-lg shadow-lg">
+            
+            <!-- Paso 1: Requisitos -->
+            <section>
+                <h2 class="text-2xl font-bold exo-title text-white mb-4 step-title"><span class="bg-[#e94560] text-white rounded-full px-3 py-1 mr-3">1</span>Identifica las Clases</h2>
+                <p class="text-gray-400 mb-4">Lee los requisitos y haz clic en los sustantivos que consideres que deben ser una clase en tu sistema.</p>
+                <div id="requirements" class="req-text p-4 bg-[#161625] rounded-lg border border-[#3a3a5e] text-lg leading-relaxed">
+                    Necesitamos un sistema para una <span data-word="Biblioteca">biblioteca</span>. La biblioteca tiene <span data-word="Libro">libros</span>. Cada <span data-word="Libro">libro</span> tiene un <span data-word="titulo">título</span> y un <span data-word="autor">autor</span>. Los <span data-word="Socio">socios</span> de la biblioteca pueden tomar <span data-word="Prestamo">préstamos</span> de <span data-word="Libro">libros</span>. Un <span data-word="Socio">socio</span> tiene un <span data-word="nombre">nombre</span> y una <span data-word="direccion">dirección</span>. Un <span data-word="Prestamo">préstamo</span> registra el <span data-word="Libro">libro</span>, el <span data-word="Socio">socio</span> y la <span data-word="fecha">fecha</span> del préstamo.
+                </div>
+            </section>
+
+            <!-- Paso 2: Diseño de Clases -->
+            <section class="mt-8">
+                <h2 class="text-2xl font-bold exo-title text-white mb-4 step-title"><span class="bg-[#e94560] text-white rounded-full px-3 py-1 mr-3">2</span>Define Atributos y Relaciones</h2>
+                <div id="class-designer" class="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Las cajas de clases se generarán aquí -->
+                </div>
+            </section>
+
+            <!-- Paso 3: Generación de Código -->
+            <section class="mt-8">
+                 <h2 class="text-2xl font-bold exo-title text-white mb-4 step-title"><span class="bg-[#e94560] text-white rounded-full px-3 py-1 mr-3">3</span>Generación en Tiempo Real</h2>
+                 <div class="flex border-b border-[#3a3a5e]">
+                    <button class="tab-button active font-semibold py-2 px-4 rounded-t-lg" data-tab="csharp">Código C# (BLL)</button>
+                    <button class="tab-button font-semibold py-2 px-4 rounded-t-lg" data-tab="sql">Script SQL (DAL)</button>
+                 </div>
+                 <div class="bg-[#161625] p-2 rounded-b-lg">
+                    <div id="csharp" class="tab-content active code-block">
+                        // El código de las clases C# aparecerá aquí...
+                    </div>
+                    <div id="sql" class="tab-content code-block">
+                        -- El script SQL para crear las tablas aparecerá aquí...
+                    </div>
+                 </div>
+            </section>
+        </main>
+        
+        <!-- Navegación -->
+        <footer class="mt-12">
+            <div class="flex justify-between items-center bg-[#1f1f3a] p-4 rounded-lg shadow-md">
+                <a href="semana-11.html" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition duration-300 flex items-center"><i class="fas fa-arrow-left mr-2"></i>Anterior</a>
+                <span class="font-semibold text-gray-400">Semana 12 de 18</span>
+                <a href="semana-13.html" class="bg-[#e94560] hover:bg-[#c73049] text-white font-bold py-2 px-4 rounded transition duration-300 flex items-center">Siguiente<i class="fas fa-arrow-right ml-2"></i></a>
+            </div>
+            <div class="text-center mt-4 text-sm text-gray-500">
+                <p>Instituto de Educación Superior Tecnológico Público "Carlos Salazar Romero"</p>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        const state = {
+            classes: new Map() // 'Libro' -> { name: 'Libro', attributes: 'string Titulo\nstring Autor' }
+        };
+
+        const reqContainer = document.getElementById('requirements');
+        const designerContainer = document.getElementById('class-designer');
+        const csharpOutput = document.getElementById('csharp');
+        const sqlOutput = document.getElementById('sql');
+        const tabs = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        function render() {
+            renderDesigner();
+            renderCode();
+        }
+        
+        function renderDesigner() {
+            designerContainer.innerHTML = '';
+            for (const [name, data] of state.classes.entries()) {
+                const box = document.createElement('div');
+                box.className = 'class-box';
+                box.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-lg font-bold text-white">${name}</h3>
+                        <button class="text-gray-500 hover:text-red-500 remove-class-btn" data-name="${name}">&times;</button>
+                    </div>
+                    <textarea class="w-full mt-2 text-sm h-24" data-name="${name}" placeholder="string Atributo1\nint Atributo2">${data.attributes}</textarea>
+                `;
+                designerContainer.appendChild(box);
+            }
+        }
+        
+        function renderCode() {
+            let csharpCode = `// --- Capa de Lógica de Negocio (BLL) ---\n\n`;
+            let sqlCode = `-- Script de Creación de Tablas (DAL) --\n\n`;
+
+            for (const [name, data] of state.classes.entries()) {
+                const attrs = data.attributes.split('\n').filter(a => a.trim());
+                
+                // C# Generation
+                csharpCode += `public class ${name}\n{\n`;
+                attrs.forEach(attr => {
+                    const [type, propName] = attr.split(' ').map(s => s.trim());
+                    if (type && propName) {
+                        csharpCode += `    public ${type} ${propName} { get; set; }\n`;
+                    }
+                });
+                csharpCode += `}\n\n`;
+                
+                // SQL Generation
+                sqlCode += `CREATE TABLE ${name.toLowerCase()}s (\n`;
+                sqlCode += `    id_${name.toLowerCase()} INT PRIMARY KEY AUTO_INCREMENT,\n`;
+                attrs.forEach(attr => {
+                     const [type, propName] = attr.split(' ').map(s => s.trim());
+                     if (type && propName) {
+                         const sqlType = mapToSqlType(type);
+                         sqlCode += `    ${propName.toLowerCase()} ${sqlType},\n`;
+                     }
+                });
+                // Simple FK logic
+                if (name === 'Prestamo') {
+                    sqlCode += `    id_libro INT,\n    id_socio INT,\n`;
+                    sqlCode += `    FOREIGN KEY (id_libro) REFERENCES libros(id_libro),\n`;
+                    sqlCode += `    FOREIGN KEY (id_socio) REFERENCES socios(id_socio),\n`;
+                }
+                sqlCode = sqlCode.slice(0, -2); // remove last comma and newline
+                sqlCode += `\n);\n\n`;
+            }
+            csharpOutput.textContent = csharpCode;
+            sqlOutput.textContent = sqlCode;
+        }
+
+        function mapToSqlType(csharpType) {
+            switch (csharpType.toLowerCase()) {
+                case 'int': return 'INT';
+                case 'string': return 'VARCHAR(255)';
+                case 'datetime': return 'DATETIME';
+                case 'decimal': return 'DECIMAL(10, 2)';
+                case 'bool': return 'BOOLEAN';
+                default: return 'VARCHAR(255)';
+            }
+        }
+
+        reqContainer.addEventListener('click', e => {
+            if (e.target.tagName === 'SPAN') {
+                const word = e.target.dataset.word;
+                const normalizedWord = word.charAt(0).toUpperCase() + word.slice(1);
+                
+                // Toggle selection on all spans with the same word
+                document.querySelectorAll(`.req-text span[data-word="${word}"]`).forEach(span => {
+                    span.classList.toggle('selected');
+                });
+
+                if (state.classes.has(normalizedWord)) {
+                   // This logic now only depends on the state of the first span
+                } else {
+                    if(document.querySelector(`.req-text span[data-word="${word}"]`).classList.contains('selected')) {
+                        let defaultAttrs = '';
+                        if(normalizedWord === 'Libro') defaultAttrs = 'string Titulo\nstring Autor';
+                        if(normalizedWord === 'Socio') defaultAttrs = 'string Nombre\nstring Direccion';
+                        if(normalizedWord === 'Prestamo') defaultAttrs = 'DateTime Fecha';
+                        state.classes.set(normalizedWord, { name: normalizedWord, attributes: defaultAttrs });
+                    }
+                }
+                
+                // If no span for this word is selected, remove from classes
+                if (!document.querySelector(`.req-text span[data-word="${word}"].selected`)) {
+                    state.classes.delete(normalizedWord);
+                }
+                
+                render();
+            }
+        });
+
+        designerContainer.addEventListener('input', e => {
+            if (e.target.tagName === 'TEXTAREA') {
+                const name = e.target.dataset.name;
+                const data = state.classes.get(name);
+                if (data) {
+                    data.attributes = e.target.value;
+                    renderCode();
+                }
+            }
+        });
+
+        designerContainer.addEventListener('click', e => {
+            if (e.target.classList.contains('remove-class-btn')) {
+                const name = e.target.dataset.name;
+                state.classes.delete(name);
+                 document.querySelectorAll(`.req-text span`).forEach(span => {
+                    if (span.dataset.word.toLowerCase() === name.toLowerCase()) {
+                        span.classList.remove('selected');
+                    }
+                });
+                render();
+            }
+        });
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                const target = document.getElementById(tab.dataset.tab);
+                tabContents.forEach(c => c.classList.remove('active'));
+                target.classList.add('active');
+            });
+        });
+
+        // Initial render
+        render();
+    </script>
+</body>
+</html>

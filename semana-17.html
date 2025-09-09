@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LPD - Semana 17: Centro de Optimización</title>
+    <!-- Incluyendo Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Incluyendo Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Incluyendo Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Fira+Code&family=Exo+2:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #111827; color: #d1d5db; }
+        .exo-title { font-family: 'Exo-2', sans-serif; }
+        .tool-card { background-color: #1f2937; border: 1px solid #374151; border-radius: 0.75rem; transition: all 0.3s ease; }
+        .tool-card:hover { transform: translateY(-5px); border-color: #3b82f6; box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2); }
+        .code-block { font-family: 'Fira Code', monospace; background-color: #0d1117; padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; overflow-x: auto; }
+        .line-error { background-color: rgba(239, 68, 68, 0.3); cursor: pointer; }
+        .line-correct { background-color: rgba(74, 222, 128, 0.3); }
+        .modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 50; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .modal-backdrop.visible { opacity: 1; pointer-events: auto; }
+        .modal-content { background-color: #1f2937; padding: 2rem; border-radius: 0.5rem; max-width: 90%; width: 600px; transform: scale(0.95); transition: transform 0.3s ease; }
+        .drag-item { cursor: grab; background-color: #374151; padding: 0.5rem; border-radius: 0.25rem; margin-bottom: 0.5rem; }
+        .drop-zone { border: 2px dashed #4b5563; padding: 1rem; border-radius: 0.5rem; min-height: 100px; transition: all 0.2s; }
+        .drop-zone.over { background-color: #374151; border-color: #3b82f6; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Contenedor Principal -->
+    <div class="container mx-auto p-4 sm:p-6 md:p-8">
+        <!-- Cabecera -->
+        <header class="text-center mb-12">
+            <i class="fas fa-wrench text-6xl mb-4 text-blue-400"></i>
+            <h1 class="text-6xl font-bold exo-title text-white drop-shadow-lg">Centro de Optimización</h1>
+            <p class="text-2xl mt-2 text-gray-300">Herramientas para Refinar y Fortalecer tu Código.</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Herramienta 1: Depurador Interactivo -->
+            <div id="tool-debugger" class="tool-card p-6 cursor-pointer">
+                <div class="flex items-center mb-4">
+                    <i class="fas fa-bug-slash text-3xl text-green-400 mr-4"></i>
+                    <div>
+                        <h2 class="text-xl font-bold exo-title text-white">Depurador Interactivo</h2>
+                        <p class="text-sm text-gray-400">Encuentra y corrige el error.</p>
+                    </div>
+                </div>
+                <p>Haz clic en la línea de código que causa que la aplicación se bloquee si el usuario ingresa texto en lugar de un número.</p>
+            </div>
+            
+            <!-- Herramienta 2: Refactorizador Visual -->
+            <div id="tool-refactor" class="tool-card p-6 cursor-pointer">
+                <div class="flex items-center mb-4">
+                    <i class="fas fa-layer-group text-3xl text-yellow-400 mr-4"></i>
+                    <div>
+                        <h2 class="text-xl font-bold exo-title text-white">Refactorizador Visual</h2>
+                        <p class="text-sm text-gray-400">Organiza el código en capas.</p>
+                    </div>
+                </div>
+                <p>Clasifica cada línea de código en su capa correcta: UI, Lógica de Negocio (BLL) o Acceso a Datos (DAL).</p>
+            </div>
+
+            <!-- Herramienta 3: Optimizador de Consultas -->
+            <div id="tool-optimizer" class="tool-card p-6 cursor-pointer">
+                 <div class="flex items-center mb-4">
+                    <i class="fas fa-database text-3xl text-red-400 mr-4"></i>
+                    <div>
+                        <h2 class="text-xl font-bold exo-title text-white">Optimizador de Consultas</h2>
+                        <p class="text-sm text-gray-400">Asegura tu base de datos.</p>
+                    </div>
+                </div>
+                <p>Identifica y soluciona la vulnerabilidad de Inyección SQL en la consulta para proteger la aplicación.</p>
+            </div>
+        </div>
+
+        <!-- Navegación -->
+        <footer class="mt-12">
+            <div class="flex justify-between items-center bg-gray-900/50 border border-gray-700 p-4 rounded-lg">
+                <a href="semana-16.html" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition duration-300"><i class="fas fa-arrow-left mr-2"></i>Anterior</a>
+                <span class="font-semibold text-gray-400">Semana 17 de 18</span>
+                <a href="semana-18.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300">Siguiente<i class="fas fa-arrow-right ml-2"></i></a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modal para las herramientas -->
+    <div id="modal" class="modal-backdrop">
+        <div id="modal-content" class="modal-content">
+            <!-- El contenido se inyectará aquí -->
+        </div>
+    </div>
+    
+    <script>
+        const modal = document.getElementById('modal');
+        const modalContent = document.getElementById('modal-content');
+        
+        function showModal(content) {
+            modalContent.innerHTML = content;
+            modal.classList.add('visible');
+        }
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('visible');
+                modalContent.style.transform = 'scale(0.95)';
+            }
+        });
+        
+        // --- Tool 1: Debugger ---
+        document.getElementById('tool-debugger').addEventListener('click', () => {
+            const content = `
+                <h2 class="text-2xl font-bold exo-title text-white mb-4">Depurador: Manejo de Errores</h2>
+                <p class="text-gray-400 mb-4">La aplicación se cierra inesperadamente si el usuario escribe "hola" en el campo de edad. Haz clic en la línea que causa el error.</p>
+                <div class="code-block">
+                    <pre><code>private void btnGuardar_Click(object sender, EventArgs e)
+{
+    string nombre = txtNombre.Text;
+    <span id="line-1">int edad = Convert.ToInt32(txtEdad.Text);</span> // Podría fallar aquí
+    
+    <span id="line-2">if (string.IsNullOrEmpty(nombre))</span>
+    {
+        <span id="line-3">MessageBox.Show("El nombre es obligatorio.");</span>
+    }
+}</code></pre>
+                </div>
+                <div id="debugger-feedback" class="mt-4"></div>
+                <button onclick="closeModal()" class="mt-4 bg-gray-600 text-white py-2 px-4 rounded">Cerrar</button>
+            `;
+            showModal(content);
+
+            document.getElementById('line-1').addEventListener('click', (e) => {
+                e.target.classList.add('line-error');
+                document.getElementById('debugger-feedback').innerHTML = `
+                    <p class="text-green-400 font-bold">¡Correcto! <code class="bg-gray-700 p-1 rounded">Convert.ToInt32</code> lanza una FormatException si el texto no es un número válido. La solución es usar <code class="bg-gray-700 p-1 rounded">int.TryParse</code> o un bloque <code class="bg-gray-700 p-1 rounded">try-catch</code>.</p>
+                `;
+            });
+            ['line-2', 'line-3'].forEach(id => {
+                 document.getElementById(id).addEventListener('click', (e) => {
+                    document.getElementById('debugger-feedback').innerHTML = `<p class="text-red-400 font-bold">Incorrecto. Esta línea es una validación, no es la que causa el 'crash' de la aplicación.</p>`;
+                 });
+            });
+        });
+
+        // --- Tool 2: Refactor ---
+        document.getElementById('tool-refactor').addEventListener('click', () => {
+            const content = `
+                <h2 class="text-2xl font-bold exo-title text-white mb-4">Refactorizador Visual</h2>
+                <p class="text-gray-400 mb-4">Arrastra cada fragmento de código a su capa correcta.</p>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <h3 class="font-bold mb-2">Código del Botón</h3>
+                        <div id="code-source">
+                            <div class="drag-item" draggable="true" data-layer="DAL">string sql = "SELECT * FROM ...";</div>
+                            <div class="drag-item" draggable="true" data-layer="UI">MessageBox.Show("Guardado");</div>
+                            <div class="drag-item" draggable="true" data-layer="BLL">if (producto.Precio < 0) return;</div>
+                            <div class="drag-item" draggable="true" data-layer="DAL">connection.Open();</div>
+                        </div>
+                    </div>
+                    <div>
+                         <h3 class="font-bold mb-2">Capas de Arquitectura</h3>
+                         <p class="text-xs text-gray-500">UI (Presentación)</p>
+                         <div class="drop-zone mb-2" data-target="UI"></div>
+                         <p class="text-xs text-gray-500">BLL (Lógica de Negocio)</p>
+                         <div class="drop-zone mb-2" data-target="BLL"></div>
+                         <p class="text-xs text-gray-500">DAL (Acceso a Datos)</p>
+                         <div class="drop-zone" data-target="DAL"></div>
+                    </div>
+                </div>
+                <div id="refactor-feedback" class="mt-4"></div>
+                <button onclick="closeModal()" class="mt-4 bg-gray-600 text-white py-2 px-4 rounded">Cerrar</button>
+            `;
+            showModal(content);
+            setupDragAndDrop();
+        });
+
+        // --- Tool 3: Optimizer ---
+        document.getElementById('tool-optimizer').addEventListener('click', () => {
+             const content = `
+                <h2 class="text-2xl font-bold exo-title text-white mb-4">Optimizador: Seguridad</h2>
+                <p class="text-gray-400 mb-4">El siguiente código es vulnerable a Inyección SQL. Haz clic en la opción que corrige la vulnerabilidad.</p>
+                <div class="code-block mb-4">
+                    <pre><code>string user = txtUser.Text;
+string query = "SELECT * FROM users WHERE name = '" + user + "'";
+// ...ejecutar query...</code></pre>
+                </div>
+                <div class="space-y-2">
+                    <button class="w-full text-left p-2 rounded bg-gray-700 hover:bg-gray-600" onclick="checkAnswer(false, this)">A) Validar que la variable 'user' no contenga comillas simples.</button>
+                    <button class="w-full text-left p-2 rounded bg-gray-700 hover:bg-gray-600" onclick="checkAnswer(true, this)">B) Usar consultas parametrizadas (ej. con MySqlParameter).</button>
+                    <button class="w-full text-left p-2 rounded bg-gray-700 hover:bg-gray-600" onclick="checkAnswer(false, this)">C) Encriptar la variable 'user' antes de concatenarla.</button>
+                </div>
+                <div id="optimizer-feedback" class="mt-4"></div>
+                <button onclick="closeModal()" class="mt-4 bg-gray-600 text-white py-2 px-4 rounded">Cerrar</button>
+            `;
+            showModal(content);
+        });
+
+        function checkAnswer(isCorrect, element) {
+            const feedback = document.getElementById('optimizer-feedback');
+            document.querySelectorAll('#modal button').forEach(b => b.disabled = true);
+            if(isCorrect){
+                element.classList.add('bg-green-600');
+                feedback.innerHTML = `<p class="text-green-400 font-bold">¡Exacto! Las consultas parametrizadas son la defensa estándar y más efectiva contra la Inyección SQL, ya que separan el código de los datos.</p>`;
+            } else {
+                element.classList.add('bg-red-600');
+                feedback.innerHTML = `<p class="text-red-400 font-bold">Incorrecto. Aunque la opción A puede ayudar, no es una solución completa. La opción C no resuelve el problema. La única solución robusta son las consultas parametrizadas.</p>`;
+            }
+        }
+        
+        function setupDragAndDrop() {
+            const draggables = document.querySelectorAll('.drag-item');
+            const dropzones = document.querySelectorAll('.drop-zone');
+            let draggedItem = null;
+
+            draggables.forEach(item => {
+                item.addEventListener('dragstart', (e) => {
+                    draggedItem = e.target;
+                    setTimeout(() => e.target.style.display = 'none', 0);
+                });
+                item.addEventListener('dragend', () => {
+                    setTimeout(() => { if (draggedItem) draggedItem.style.display = 'block'; draggedItem = null; }, 0);
+                });
+            });
+
+            dropzones.forEach(zone => {
+                zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('over'); });
+                zone.addEventListener('dragleave', () => zone.classList.remove('over'));
+                zone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    zone.classList.remove('over');
+                    if(draggedItem && zone.dataset.target === draggedItem.dataset.layer) {
+                        zone.appendChild(draggedItem);
+                        draggedItem.style.cursor = 'default';
+                        draggedItem = null;
+                    }
+                });
+            });
+        }
+        
+        function closeModal() {
+            modal.classList.remove('visible');
+        }
+
+    </script>
+</body>
+</html>

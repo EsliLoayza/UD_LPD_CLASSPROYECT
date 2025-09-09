@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LPD - Semana 11: Arquitectura de Capas</title>
+    <!-- Incluyendo Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Incluyendo Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Incluyendo Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Fira+Code&family=Exo+2:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .exo-title { font-family: 'Exo 2', sans-serif; }
+        .code-block { background-color: #1e293b; color: #cbd5e1; border-radius: 0.5rem; font-family: 'Fira-Code', monospace; padding: 1rem; font-size: 0.875rem; line-height: 1.6; white-space: pre-wrap; }
+        .layer { transition: all 0.3s ease-in-out; }
+        .layer:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .data-packet { position: absolute; left: 50%; transform: translateX(-50%); width: 50px; height: 30px; background-color: #f59e0b; border-radius: 4px; border: 2px solid white; box-shadow: 0 0 15px #f59e0b; opacity: 0; z-index: 10; transition: all 1s cubic-bezier(0.4, 0, 0.2, 1); }
+        .data-packet.active { opacity: 1; }
+        .code-view { display: none; }
+        .code-view.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .slider-container { position: relative; width: 100%; height: 400px; overflow: hidden; border-radius: 0.5rem; }
+        .slider-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; }
+        .slider-resizer { position: absolute; top: 0; left: 50%; width: 4px; height: 100%; background-color: #f59e0b; cursor: ew-resize; z-index: 2; }
+    </style>
+</head>
+<body class="antialiased text-gray-800">
+
+    <!-- Contenedor Principal -->
+    <div class="container mx-auto p-4 sm:p-6 md:p-8">
+
+        <!-- Cabecera -->
+        <header class="bg-gradient-to-br from-indigo-600 to-purple-600 text-white shadow-xl rounded-lg p-8 mb-8 text-center">
+            <i class="fas fa-layer-group text-5xl mb-4"></i>
+            <h1 class="text-5xl font-bold exo-title">Semana 11: La Arquitectura de Capas</h1>
+            <p class="text-xl mt-2">Construyendo software organizado, reutilizable y profesional.</p>
+        </header>
+
+        <!-- Plataforma de Arquitectura Visual -->
+        <section class="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+            <h2 class="text-3xl font-bold text-gray-900 mb-2 exo-title">Plataforma de Arquitectura Visual</h2>
+            <p class="text-gray-600 mb-6">Selecciona una operación para simular el flujo de datos a través de las capas.</p>
+            
+            <div class="text-center mb-8">
+                <div class="inline-flex rounded-md shadow-sm" role="group">
+                    <button type="button" class="op-button py-2 px-4 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100 focus:z-10 focus:ring-2 focus:ring-blue-500" data-op="Listar">
+                        <i class="fas fa-list-ul mr-2"></i>Listar
+                    </button>
+                    <button type="button" class="op-button py-2 px-4 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-100 focus:z-10 focus:ring-2 focus:ring-blue-500" data-op="Insertar">
+                        <i class="fas fa-save mr-2"></i>Insertar
+                    </button>
+                    <button type="button" class="op-button py-2 px-4 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-r-md hover:bg-gray-100 focus:z-10 focus:ring-2 focus:ring-blue-500" data-op="Eliminar">
+                        <i class="fas fa-trash mr-2"></i>Eliminar
+                    </button>
+                </div>
+            </div>
+
+            <div class="relative">
+                <div class="data-packet" id="data-packet"></div>
+                <!-- Las 3 Capas -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                    <div id="layer-ui" class="layer bg-blue-100 p-4 rounded-lg border-2 border-blue-300">
+                        <i class="fas fa-desktop text-3xl text-blue-600"></i>
+                        <h3 class="font-bold text-lg mt-2">Capa de Presentación (UI)</h3>
+                        <p class="text-sm">Formularios, botones, grillas.</p>
+                        <div class="code-view mt-2 text-left" id="code-ui"></div>
+                    </div>
+                    <div id="layer-bll" class="layer bg-green-100 p-4 rounded-lg border-2 border-green-300">
+                        <i class="fas fa-cogs text-3xl text-green-600"></i>
+                        <h3 class="font-bold text-lg mt-2">Lógica de Negocio (BLL)</h3>
+                        <p class="text-sm">Clases de modelo (Ej: `Producto.cs`)</p>
+                         <div class="code-view mt-2 text-left" id="code-bll"></div>
+                    </div>
+                    <div id="layer-dal" class="layer bg-yellow-100 p-4 rounded-lg border-2 border-yellow-300">
+                        <i class="fas fa-database text-3xl text-yellow-600"></i>
+                        <h3 class="font-bold text-lg mt-2">Acceso a Datos (DAL)</h3>
+                        <p class="text-sm">Clases que hablan con la BD.</p>
+                         <div class="code-view mt-2 text-left" id="code-dal"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Antes y Después -->
+        <section class="mt-12 bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+             <h2 class="text-3xl font-bold text-gray-900 mb-4 exo-title text-center">Antes y Después: Refactorización</h2>
+             <p class="text-center text-gray-600 mb-6">Arrastra la barra para comparar el código del formulario antes y después de aplicar la arquitectura en capas.</p>
+             <div class="slider-container">
+                <div class="slider-image" style="background-image: url('https://placehold.co/800x400/1e293b/ffffff?text=CÓDIGO+DESPUÉS+(Limpio+y+Corto)');"></div>
+                <div class="slider-image" id="before-image" style="background-image: url('https://placehold.co/800x400/1e293b/ffffff?text=CÓDIGO+ANTES+(Largo+y+Desordenado)'); width: 50%;"></div>
+                <div class="slider-resizer" id="resizer"></div>
+             </div>
+        </section>
+
+        <!-- Navegación -->
+        <footer class="mt-12">
+            <div class="flex justify-between items-center bg-gray-800 text-white p-4 rounded-lg shadow-md">
+                <a href="semana-10.html" class="bg-gray-600 hover:bg-gray-700 font-bold py-2 px-4 rounded transition duration-300 flex items-center"><i class="fas fa-arrow-left mr-2"></i>Anterior</a>
+                <span class="font-semibold">Semana 11 de 18</span>
+                <a href="semana-12.html" class="bg-indigo-600 hover:bg-indigo-700 font-bold py-2 px-4 rounded transition duration-300 flex items-center">Siguiente<i class="fas fa-arrow-right ml-2"></i></a>
+            </div>
+            <div class="text-center mt-4 text-sm text-gray-500">
+                <p>Instituto de Educación Superior Tecnológico Público "Carlos Salazar Romero"</p>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        // --- Lógica de la Plataforma Visual ---
+        const opButtons = document.querySelectorAll('.op-button');
+        const packet = document.getElementById('data-packet');
+        const layerUI = document.getElementById('layer-ui');
+        const layerBLL = document.getElementById('layer-bll');
+        const layerDAL = document.getElementById('layer-dal');
+        const codeViews = {
+            ui: document.getElementById('code-ui'),
+            bll: document.getElementById('code-bll'),
+            dal: document.getElementById('code-dal')
+        };
+        const codeSnippets = {
+            Listar: {
+                ui: `<div class="code-block text-xs">List<Producto> lista =<br>  productoDatos.ListarTodos();<br>dgv.DataSource = lista;</div>`,
+                bll: ``,
+                dal: `<div class="code-block text-xs">public List<Producto> ListarTodos() {<br>  // SELECT * FROM ...<br>  // Bucle para crear objetos<br>  return lista;<br>}</div>`
+            },
+            Insertar: {
+                ui: `<div class="code-block text-xs">Producto p = new Producto();<br>// Llenar p desde TextBox<br>productoDatos.Insertar(p);</div>`,
+                bll: `<div class="code-block text-xs">// El objeto 'Producto' (p) viaja<br>// como un contenedor de datos<br>// entre las capas.</div>`,
+                dal: `<div class="code-block text-xs">public bool Insertar(Producto p) {<br>  // INSERT INTO ...<br>  // Parámetros desde p.Nombre<br>  return true;<br>}</div>`
+            },
+             Eliminar: {
+                ui: `<div class="code-block text-xs">int id = (int)dgv.SelectedId;<br>productoDatos.Eliminar(id);</div>`,
+                bll: ``,
+                dal: `<div class="code-block text-xs">public bool Eliminar(int id) {<br>  // DELETE FROM ...<br>  // WHERE id = @id<br>  return true;<br>}</div>`
+            }
+        };
+
+        function simulateFlow(operation) {
+            // Reset state
+            packet.style.transition = 'none';
+            packet.classList.remove('active');
+            Object.values(codeViews).forEach(v => { v.classList.remove('active'); v.innerHTML = ''; });
+
+            // Set code
+            codeViews.ui.innerHTML = codeSnippets[operation].ui;
+            codeViews.bll.innerHTML = codeSnippets[operation].bll;
+            codeViews.dal.innerHTML = codeSnippets[operation].dal;
+            Object.values(codeViews).forEach(v => { if(v.innerHTML) v.classList.add('active'); });
+
+            // Start animation
+            setTimeout(() => {
+                packet.style.transition = 'all 1s cubic-bezier(0.4, 0, 0.2, 1)';
+                packet.style.top = `${layerUI.offsetTop + 30}px`;
+                packet.classList.add('active');
+
+                setTimeout(() => {
+                    packet.style.top = `${layerBLL.offsetTop + 30}px`;
+                }, 1000);
+                setTimeout(() => {
+                    packet.style.top = `${layerDAL.offsetTop + 30}px`;
+                }, 2000);
+                setTimeout(() => {
+                    packet.classList.remove('active');
+                }, 3000);
+            }, 100);
+        }
+
+        opButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                simulateFlow(button.dataset.op);
+            });
+        });
+
+        // --- Lógica del Slider de Comparación ---
+        const resizer = document.getElementById('resizer');
+        const beforeImage = document.getElementById('before-image');
+        let isResizing = false;
+
+        resizer.addEventListener('mousedown', () => { isResizing = true; });
+        document.addEventListener('mouseup', () => { isResizing = false; });
+        document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+            const container = resizer.parentElement;
+            const rect = container.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const width = Math.max(0, Math.min(x, rect.width));
+            beforeImage.style.width = `${width}px`;
+            resizer.style.left = `${width}px`;
+        });
+
+    </script>
+</body>
+</html>

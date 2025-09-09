@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LPD - Semana 16: Centro de Lanzamiento de Proyectos</title>
+    <!-- Incluyendo Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Incluyendo Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Incluyendo Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Fira+Code&family=Exo+2:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: url('https://placehold.co/1920x1080/0f172a/38bdf8?text=.') no-repeat center center fixed; background-size: cover; color: #e5e7eb; }
+        .exo-title { font-family: 'Exo-2', sans-serif; }
+        .glass-panel { background: rgba(17, 24, 39, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .checklist-item { transition: all 0.3s ease; }
+        .checklist-item.completed { color: #4ade80; text-decoration: line-through; }
+        .checklist-item.completed .fa-circle { color: #4ade80; }
+        .flip-card { perspective: 1000px; }
+        .flip-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; }
+        .flip-card:hover .flip-card-inner { transform: rotateY(180deg); }
+        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 1rem; border-radius: 0.5rem; }
+        .flip-card-back { transform: rotateY(180deg); }
+        .btn-launch { background: linear-gradient(to right, #ef4444, #f97316); color: white; font-weight: bold; border: none; padding: 1rem 2rem; border-radius: 9999px; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); transition: all 0.3s; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); } 50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(249, 115, 22, 0.8); } 100% { transform: scale(1); box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); } }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Contenedor Principal -->
+    <div class="container mx-auto p-4 sm:p-6 md:p-8">
+        <!-- Cabecera -->
+        <header class="text-center mb-12">
+            <i class="fas fa-satellite-dish text-6xl mb-4 text-sky-400 animate-pulse"></i>
+            <h1 class="text-6xl font-bold exo-title text-white drop-shadow-lg">Centro de Lanzamiento</h1>
+            <p class="text-2xl mt-2 text-gray-300">Misión: Presentación del Proyecto Final</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+            <!-- Panel Izquierdo: Checklist de Misión -->
+            <div class="lg:col-span-1 glass-panel rounded-lg p-6">
+                <h2 class="text-2xl font-bold exo-title text-white mb-4"><i class="fas fa-tasks mr-2"></i>Checklist de Misión</h2>
+                <ul id="checklist" class="space-y-3">
+                    <li class="checklist-item flex items-center cursor-pointer" data-item="code">
+                        <i class="far fa-circle mr-3"></i><span>Código Fuente Completo</span>
+                    </li>
+                    <li class="checklist-item flex items-center cursor-pointer" data-item="sql">
+                        <i class="far fa-circle mr-3"></i><span>Script de Base de Datos</span>
+                    </li>
+                    <li class="checklist-item flex items-center cursor-pointer" data-item="uml">
+                        <i class="far fa-circle mr-3"></i><span>Diagramas UML</span>
+                    </li>
+                    <li class="checklist-item flex items-center cursor-pointer" data-item="slides">
+                        <i class="far fa-circle mr-3"></i><span>Diapositivas de Presentación</span>
+                    </li>
+                    <li class="checklist-item flex items-center cursor-pointer" data-item="demo">
+                        <i class="far fa-circle mr-3"></i><span>Ensayo de Demo en Vivo</span>
+                    </li>
+                    <li class="checklist-item flex items-center cursor-pointer" data-item="backup">
+                        <i class="far fa-circle mr-3"></i><span>Backup del Proyecto</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Panel Central: Simulador de Q&A -->
+            <div class="lg:col-span-1 glass-panel rounded-lg p-6">
+                 <h2 class="text-2xl font-bold exo-title text-white mb-4"><i class="fas fa-microphone-alt mr-2"></i>Simulador de Q&A</h2>
+                 <p class="text-sm text-gray-400 mb-4">Prepárate para las preguntas difíciles. Haz clic en la tarjeta para revelar la pregunta.</p>
+                <div id="qa-card" class="flip-card h-48 cursor-pointer">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front glass-panel border-sky-500">
+                            <i class="fas fa-question-circle text-5xl text-sky-400"></i>
+                            <p class="mt-4 font-bold">Generar Pregunta</p>
+                        </div>
+                        <div id="qa-back" class="flip-card-back glass-panel border-sky-500 bg-sky-900/50">
+                            <p class="font-semibold"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Panel Derecho: Estado de Lanzamiento -->
+            <div class="lg:col-span-1 glass-panel rounded-lg p-6 text-center">
+                <h2 class="text-2xl font-bold exo-title text-white mb-4">Estado del Sistema</h2>
+                <div id="status-icon" class="text-8xl mb-4">
+                    <i class="fas fa-spinner fa-spin text-yellow-400"></i>
+                </div>
+                <p id="status-text" class="text-xl font-semibold text-yellow-400 mb-6">Sistemas en Verificación...</p>
+                <button id="launch-button" class="btn-launch" disabled>Lanzamiento Bloqueado</button>
+            </div>
+        </div>
+
+        <!-- Navegación -->
+        <footer class="mt-12">
+            <div class="flex justify-between items-center glass-panel p-4 rounded-lg">
+                <a href="semana-15.html" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition duration-300"><i class="fas fa-arrow-left mr-2"></i>Anterior</a>
+                <span class="font-semibold text-gray-400">Semana 16 de 18</span>
+                <a href="semana-17.html" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded transition duration-300">Siguiente<i class="fas fa-arrow-right ml-2"></i></a>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        const checklistItems = document.querySelectorAll('.checklist-item');
+        const statusIcon = document.getElementById('status-icon');
+        const statusText = document.getElementById('status-text');
+        const launchButton = document.getElementById('launch-button');
+        let completedItems = 0;
+        const totalItems = checklistItems.length;
+
+        // --- Checklist Logic ---
+        checklistItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const isCompleted = item.classList.toggle('completed');
+                const icon = item.querySelector('i');
+                if (isCompleted) {
+                    completedItems++;
+                    icon.classList.remove('fa-circle');
+                    icon.classList.add('fa-check-circle');
+                } else {
+                    completedItems--;
+                    icon.classList.remove('fa-check-circle');
+                    icon.classList.add('fa-circle');
+                }
+                updateLaunchStatus();
+            });
+        });
+
+        // --- Launch Status Logic ---
+        function updateLaunchStatus() {
+            if (completedItems === totalItems) {
+                statusIcon.innerHTML = '<i class="fas fa-check-circle text-green-400"></i>';
+                statusText.innerText = '¡Todos los Sistemas Listos!';
+                statusText.className = 'text-xl font-semibold text-green-400 mb-6';
+                launchButton.disabled = false;
+                launchButton.innerText = '¡Iniciar Presentación!';
+            } else {
+                statusIcon.innerHTML = `<i class="fas fa-spinner fa-spin text-yellow-400"></i>`;
+                statusText.innerText = `Verificación al ${Math.round((completedItems / totalItems) * 100)}%...`;
+                statusText.className = 'text-xl font-semibold text-yellow-400 mb-6';
+                launchButton.disabled = true;
+                launchButton.innerText = 'Lanzamiento Bloqueado';
+            }
+        }
+
+        // --- Q&A Card Logic ---
+        const qaCard = document.getElementById('qa-card');
+        const qaBack = document.querySelector('#qa-back p');
+        const questions = [
+            "¿Cuál fue el desafío técnico más grande que enfrentaste y cómo lo superaste?",
+            "Si tuvieras un mes más, ¿qué funcionalidad crítica añadirías a tu proyecto?",
+            "Explica la decisión de diseño detrás de tu clase más importante.",
+            "¿Cómo manejas los errores o la entrada de datos incorrectos por parte del usuario?",
+            "Muéstrame en tu código cómo implementaste la conexión a la base de datos.",
+            "¿Por qué tu solución es mejor que otras alternativas existentes en el mercado?",
+            "¿Cómo asegura tu arquitectura que el sistema sea fácil de mantener en el futuro?",
+        ];
+        let currentQuestionIndex = 0;
+
+        qaCard.addEventListener('click', () => {
+            currentQuestionIndex = (currentQuestionIndex + 1) % questions.length;
+            qaBack.innerText = questions[currentQuestionIndex];
+        });
+        
+        // Initial state
+        updateLaunchStatus();
+        qaBack.innerText = questions[0];
+    </script>
+</body>
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LPD - Semana 05: El Puente a los Datos Reales</title>
+    <!-- Incluyendo Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Incluyendo Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Incluyendo Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f0f4f8; }
+        .code-block {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            position: relative;
+        }
+        .code-block .copy-btn {
+            position: absolute; top: 0.5rem; right: 0.5rem; background-color: #475569;
+            color: white; border: none; padding: 0.25rem 0.5rem; border-radius: 0.25rem;
+            cursor: pointer; opacity: 0.5; transition: all 0.3s;
+        }
+        .code-block:hover .copy-btn { opacity: 1; }
+        .step-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Contenedor Principal -->
+    <div class="container mx-auto p-4 sm:p-6 md:p-8">
+
+        <!-- Cabecera -->
+        <header class="bg-gradient-to-r from-blue-600 to-purple-700 text-white shadow-xl rounded-lg p-8 mb-8 text-center">
+            <i class="fas fa-database text-5xl mb-4"></i>
+            <h1 class="text-4xl font-bold">Semana 05: Construyendo el Puente de Datos</h1>
+            <p class="text-xl mt-2">De la memoria volátil al almacenamiento persistente con ADO.NET y MySQL.</p>
+        </header>
+
+        <!-- Contenido Principal -->
+        <main class="space-y-10">
+            
+            <!-- Sección Arquitectura -->
+            <section class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-sitemap text-purple-600 mr-3"></i>Arquitectura Cliente/Servidor
+                </h2>
+                <p class="text-lg mb-6">Nuestra aplicación (Cliente) le pedirá datos a un programa especializado (Servidor de Base de Datos). ¡Así funcionan casi todas las aplicaciones del mundo!</p>
+                <div class="flex flex-col md:flex-row items-center justify-between bg-gray-100 p-6 rounded-lg">
+                    <div class="text-center">
+                        <i class="fas fa-desktop text-5xl text-blue-500"></i>
+                        <h3 class="font-bold mt-2">CLIENTE</h3>
+                        <p>(Tu App en C#)</p>
+                    </div>
+                    <div class="text-center my-4 md:my-0">
+                        <i class="fas fa-long-arrow-alt-right text-4xl text-gray-400 md:hidden"></i>
+                        <i class="fas fa-long-arrow-alt-down text-4xl text-gray-400 hidden md:block transform rotate-90"></i>
+                        <p class="font-semibold text-purple-700">Petición (SQL)</p>
+                        <i class="fas fa-long-arrow-alt-left text-4xl text-gray-400 hidden md:block transform rotate-90"></i>
+                         <p class="font-semibold text-green-700">Respuesta (Datos)</p>
+                    </div>
+                    <div class="text-center">
+                        <i class="fas fa-server text-5xl text-blue-500"></i>
+                        <h3 class="font-bold mt-2">SERVIDOR</h3>
+                        <p>(Base de Datos MySQL)</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Sección Pasos -->
+            <section>
+                 <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">El Proceso en 4 Pasos</h2>
+                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Step 1 -->
+                    <div class="step-card bg-white p-6 rounded-lg shadow-lg text-center">
+                        <div class="text-3xl font-bold text-purple-600 bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">1</div>
+                        <i class="fas fa-cogs text-4xl text-purple-600 mb-3"></i>
+                        <h3 class="text-xl font-semibold mb-2">Instalar el Conector</h3>
+                        <p>Añadimos el "traductor" de MySQL a nuestro proyecto usando el Administrador de Paquetes NuGet.</p>
+                    </div>
+                    <!-- Step 2 -->
+                    <div class="step-card bg-white p-6 rounded-lg shadow-lg text-center">
+                         <div class="text-3xl font-bold text-purple-600 bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">2</div>
+                        <i class="fas fa-key text-4xl text-purple-600 mb-3"></i>
+                        <h3 class="text-xl font-semibold mb-2">Crear la Conexión</h3>
+                        <p>Establecemos la "tubería" hacia la base de datos usando la Cadena de Conexión (la dirección del servidor).</p>
+                    </div>
+                    <!-- Step 3 -->
+                    <div class="step-card bg-white p-6 rounded-lg shadow-lg text-center">
+                         <div class="text-3xl font-bold text-purple-600 bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">3</div>
+                        <i class="fas fa-paper-plane text-4xl text-purple-600 mb-3"></i>
+                        <h3 class="text-xl font-semibold mb-2">Ejecutar la Consulta</h3>
+                        <p>Enviamos al "mensajero" (`DataAdapter`) con una pregunta en SQL para que traiga los datos.</p>
+                    </div>
+                    <!-- Step 4 -->
+                    <div class="step-card bg-white p-6 rounded-lg shadow-lg text-center">
+                         <div class="text-3xl font-bold text-purple-600 bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">4</div>
+                        <i class="fas fa-box-open text-4xl text-purple-600 mb-3"></i>
+                        <h3 class="text-xl font-semibold mb-2">Llenar el DataSet</h3>
+                        <p>Los datos regresan y se guardan en nuestro "almacén" local (`DataSet`) para luego mostrarlos.</p>
+                    </div>
+                 </div>
+            </section>
+
+            <!-- Constructor de Cadena de Conexión -->
+            <section class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4 flex items-center"><i class="fas fa-wrench text-purple-600 mr-3"></i>Constructor de Cadena de Conexión</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="server" class="font-semibold">Servidor:</label>
+                        <input type="text" id="server" value="127.0.0.1" class="w-full p-2 border rounded mt-1">
+                    </div>
+                    <div>
+                        <label for="database" class="font-semibold">Base de Datos:</label>
+                        <input type="text" id="database" value="mi_basedatos" class="w-full p-2 border rounded mt-1">
+                    </div>
+                     <div>
+                        <label for="uid" class="font-semibold">Usuario:</label>
+                        <input type="text" id="uid" value="root" class="w-full p-2 border rounded mt-1">
+                    </div>
+                     <div>
+                        <label for="pwd" class="font-semibold">Contraseña:</label>
+                        <input type="password" id="pwd" value="admin" class="w-full p-2 border rounded mt-1">
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <p class="font-semibold">Tu código C#:</p>
+                    <div class="code-block mt-2">
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                        <pre><code id="connection-string-code">string cadena = "server=127.0.0.1;database=mi_basedatos;uid=root;pwd=admin;";</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Actividad -->
+            <section class="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-lg shadow-xl">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4 flex items-center"><i class="fas fa-laptop-code text-blue-600 mr-3"></i>Actividad de Aprendizaje N° 05</h2>
+                <div>
+                    <h3 class="text-xl font-semibold">Ejercicio: Visualizador Básico de Empleados</h3>
+                    <p class="mt-2">Prepara una base de datos `recursos_humanos` con una tabla `empleados`. Luego, crea una aplicación en C# que, al presionar un botón, se conecte a esa base de datos, lea todos los empleados y los muestre en un `DataGridView`.</p>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Navegación -->
+        <footer class="mt-10">
+            <div class="flex justify-between items-center bg-white p-4 rounded-lg shadow-md">
+                <a href="semana-04.html" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition duration-300 flex items-center"><i class="fas fa-arrow-left mr-2"></i>Anterior</a>
+                <span class="text-gray-600 font-semibold">Semana 5 de 18</span>
+                <a href="semana-06.html" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition duration-300 flex items-center">Siguiente<i class="fas fa-arrow-right ml-2"></i></a>
+            </div>
+             <div class="text-center mt-4 text-sm text-gray-500">
+                <p>Instituto de Educación Superior Tecnológico Público "Carlos Salazar Romero"</p>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        const serverInput = document.getElementById('server');
+        const dbInput = document.getElementById('database');
+        const uidInput = document.getElementById('uid');
+        const pwdInput = document.getElementById('pwd');
+        const codeOutput = document.getElementById('connection-string-code');
+
+        function updateConnectionString() {
+            const server = serverInput.value;
+            const db = dbInput.value;
+            const uid = uidInput.value;
+            const pwd = pwdInput.value;
+            codeOutput.textContent = `string cadena = "server=${server};database=${db};uid=${uid};pwd=${pwd};";`;
+        }
+
+        [serverInput, dbInput, uidInput, pwdInput].forEach(input => {
+            input.addEventListener('input', updateConnectionString);
+        });
+        
+        function copyCode(button) {
+            const code = codeOutput.innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                const originalIcon = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check"></i> Copiado!';
+                setTimeout(() => { button.innerHTML = originalIcon; }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

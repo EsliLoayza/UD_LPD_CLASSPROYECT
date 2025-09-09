@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LPD - Semana 07: Conectando los Puntos con INNER JOIN</title>
+    <!-- Incluyendo Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Incluyendo Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Incluyendo Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Fira+Code&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .code-block {
+            background-color: #1f2937; color: #d1d5db; border-radius: 0.5rem;
+            font-family: 'Fira Code', monospace; position: relative;
+            padding: 1.25rem;
+        }
+        .code-block .copy-btn {
+            position: absolute; top: 0.5rem; right: 0.5rem; background-color: #4b5563;
+            color: white; border: none; padding: 0.25rem 0.5rem; border-radius: 0.25rem;
+            cursor: pointer; opacity: 0.3; transition: all 0.3s;
+        }
+        .code-block:hover .copy-btn { opacity: 1; }
+        .table-container {
+            border: 2px solid #e5e7eb; border-radius: 0.5rem; padding: 1rem;
+            background-color: white;
+        }
+        .table-header { font-weight: bold; background-color: #f9fafb; }
+        .pk { color: #8b5cf6; font-weight: bold; } /* Primary Key */
+        .fk { color: #3b82f6; font-weight: bold; } /* Foreign Key */
+        #join-line {
+            stroke: #ef4444; stroke-width: 3; stroke-dasharray: 8 4;
+            animation: dash 1s linear infinite;
+        }
+        @keyframes dash { to { stroke-dashoffset: -12; } }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Contenedor Principal -->
+    <div class="container mx-auto p-4 sm:p-6 md:p-8">
+
+        <!-- Cabecera -->
+        <header class="bg-gradient-to-r from-purple-600 to-indigo-700 text-white shadow-xl rounded-lg p-8 mb-8 text-center">
+            <i class="fas fa-project-diagram text-5xl mb-4"></i>
+            <h1 class="text-4xl font-bold">Semana 07: Conectando los Puntos</h1>
+            <p class="text-xl mt-2">De tablas solitarias a reportes inteligentes con `INNER JOIN`.</p>
+        </header>
+
+        <!-- Contenido Principal -->
+        <main class="space-y-12">
+            
+            <!-- Laboratorio Interactivo de JOIN -->
+            <section class="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4 flex items-center">
+                    <i class="fas fa-flask text-purple-600 mr-3"></i>Laboratorio Interactivo de `INNER JOIN`
+                </h2>
+                <p class="mb-6 text-gray-600">Visualiza cómo `INNER JOIN` utiliza las claves para combinar dos tablas. Observa cómo se genera el código SQL en tiempo real.</p>
+                
+                <!-- Contenedor de las tablas y la línea -->
+                <div class="relative grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                    <!-- Tabla 1: Productos -->
+                    <div id="table1-container" class="table-container">
+                        <h3 class="font-bold text-lg mb-2 text-center text-gray-800">Tabla: `productos`</h3>
+                        <table class="w-full text-sm text-left text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase table-header">
+                                <tr><th class="px-4 py-2">id_producto (<span class="pk">PK</span>)</th><th class="px-4 py-2">nombre_producto</th><th class="px-4 py-2">id_categoria (<span class="fk">FK</span>)</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr class="bg-white border-b"><td class="px-4 py-2 pk">101</td><td class="px-4 py-2">Laptop Gamer</td><td class="px-4 py-2 fk" id="fk1">1</td></tr>
+                                <tr class="bg-gray-50 border-b"><td class="px-4 py-2 pk">102</td><td class="px-4 py-2">Teclado Mecánico</td><td class="px-4 py-2 fk" id="fk2">1</td></tr>
+                                <tr class="bg-white border-b"><td class="px-4 py-2 pk">103</td><td class="px-4 py-2">Silla de Oficina</td><td class="px-4 py-2 fk" id="fk3">2</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- SVG para la línea de unión -->
+                    <svg id="svg-connector" class="absolute w-full h-full pointer-events-none" style="display:none; z-index: 10;">
+                        <line id="join-line" x1="0" y1="0" x2="0" y2="0" />
+                    </svg>
+                    
+                    <!-- Tabla 2: Categorías -->
+                    <div id="table2-container" class="table-container">
+                        <h3 class="font-bold text-lg mb-2 text-center text-gray-800">Tabla: `categorias`</h3>
+                        <table class="w-full text-sm text-left text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase table-header">
+                                <tr><th class="px-4 py-2">id_categoria (<span class="pk">PK</span>)</th><th class="px-4 py-2">nombre_categoria</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr class="bg-white border-b"><td class="px-4 py-2 pk" id="pk1">1</td><td class="px-4 py-2">Computación</td></tr>
+                                <tr class="bg-gray-50 border-b"><td class="px-4 py-2 pk" id="pk2">2</td><td class="px-4 py-2">Oficina</td></tr>
+                                <tr class="bg-white border-b"><td class="px-4 py-2 pk" id="pk3">3</td><td class="px-4 py-2">Audio y Video</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Código SQL y Resultado -->
+                <div class="mt-8">
+                    <h3 class="font-bold text-lg text-gray-800">Código SQL Generado:</h3>
+                    <div class="code-block mt-2">
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i></button>
+                        <pre><code><span class="text-pink-400">SELECT</span> p.nombre_producto, c.nombre_categoria
+<span class="text-pink-400">FROM</span> productos <span class="text-gray-400">AS</span> p
+<span class="text-pink-400">INNER JOIN</span> categorias <span class="text-gray-400">AS</span> c
+<span class="text-pink-400">ON</span> p.id_categoria = c.id_categoria;</code></pre>
+                    </div>
+                    <h3 class="font-bold text-lg text-gray-800 mt-6">Resultado de la Consulta (Tabla Virtual):</h3>
+                    <div class="table-container mt-2 bg-purple-50 border-purple-300">
+                         <table class="w-full text-sm text-left text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase" style="background-color: #ede9fe;">
+                                <tr><th class="px-4 py-2">nombre_producto</th><th class="px-4 py-2">nombre_categoria</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b bg-white"><td class="px-4 py-2">Laptop Gamer</td><td class="px-4 py-2">Computación</td></tr>
+                                <tr class="border-b" style="background-color: #f5f3ff;"><td class="px-4 py-2">Teclado Mecánico</td><td class="px-4 py-2">Computación</td></tr>
+                                <tr class="border-b bg-white"><td class="px-4 py-2">Silla de Oficina</td><td class="px-4 py-2">Oficina</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Sección de Vistas -->
+            <section class="bg-gray-800 text-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-3xl font-bold mb-4 flex items-center"><i class="far fa-eye text-indigo-400 mr-3"></i>El Truco Profesional: Las Vistas (`VIEW`)</h2>
+                <p class="mb-4 text-gray-300">Una Vista es una consulta compleja guardada en la base de datos. ¡Simplifica tu código C# drásticamente!</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                    <div>
+                        <h4 class="font-bold text-lg mb-2">Paso 1: Crear la Vista (en la BD)</h4>
+                        <div class="code-block text-sm">
+                            <code><span class="text-pink-400">CREATE VIEW</span> v_reporte <span class="text-pink-400">AS</span>
+    <span class="text-pink-400">SELECT</span> p.nombre_producto, c.nombre_categoria
+    <span class="text-pink-400">FROM</span> productos p
+    <span class="text-pink-400">INNER JOIN</span> ... ;</code>
+                        </div>
+                    </div>
+                     <div>
+                        <h4 class="font-bold text-lg mb-2">Paso 2: Usarla en C# (¡Así de simple!)</h4>
+                        <div class="code-block text-sm">
+                            <code>string consulta = <span class="text-green-400">"SELECT * FROM v_reporte;"</span>;
+MySqlDataAdapter adaptador = <span class="text-yellow-400">new</span> MySqlDataAdapter(consulta, conexion);
+...</code>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Actividad -->
+            <section class="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4 flex items-center"><i class="fas fa-laptop-code text-purple-600 mr-3"></i>Actividad de Aprendizaje N° 07</h2>
+                <div>
+                    <h3 class="text-xl font-semibold">Ejercicio: Reporte de Ventas Detallado</h3>
+                    <p class="mt-2 text-gray-600">Crea una base de datos con tablas `clientes`, `productos` y `ventas`. Luego, construye una aplicación que muestre un reporte que combine datos de las tres tablas. **Reto Profesional:** Implementa la solución final usando una `VIEW` en la base de datos.</p>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Navegación -->
+        <footer class="mt-12">
+            <div class="flex justify-between items-center bg-white p-4 rounded-lg shadow-md">
+                <a href="semana-06.html" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition duration-300 flex items-center"><i class="fas fa-arrow-left mr-2"></i>Anterior</a>
+                <span class="text-gray-700 font-semibold">Semana 7 de 18</span>
+                <a href="semana-08.html" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition duration-300 flex items-center">Siguiente<i class="fas fa-arrow-right ml-2"></i></a>
+            </div>
+            <div class="text-center mt-4 text-sm text-gray-500">
+                <p>Instituto de Educación Superior Tecnológico Público "Carlos Salazar Romero"</p>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        function drawJoinLine() {
+            const svg = document.getElementById('svg-connector');
+            const line = document.getElementById('join-line');
+            const container = svg.parentElement;
+
+            // Seleccionamos un FK y un PK para la demostración
+            const fkElement = document.getElementById('fk2'); 
+            const pkElement = document.getElementById('pk1'); 
+
+            if (!fkElement || !pkElement) return;
+
+            const containerRect = container.getBoundingClientRect();
+            const fkRect = fkElement.getBoundingClientRect();
+            const pkRect = pkElement.getBoundingClientRect();
+
+            const startX = fkRect.right - containerRect.left;
+            const startY = fkRect.top + fkRect.height / 2 - containerRect.top;
+            
+            const endX = pkRect.left - containerRect.left;
+            const endY = pkRect.top + pkRect.height / 2 - containerRect.top;
+
+            line.setAttribute('x1', startX);
+            line.setAttribute('y1', startY);
+            line.setAttribute('x2', endX);
+            line.setAttribute('y2', endY);
+            
+            svg.style.display = 'block';
+        }
+
+        function copyCode(button) {
+            const codeBlock = button.parentElement;
+            const code = codeBlock.querySelector('pre').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                const originalIcon = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check"></i>';
+                setTimeout(() => { button.innerHTML = originalIcon; }, 1500);
+            });
+        }
+        
+        // Dibuja la línea cuando la página carga y cuando se redimensiona
+        window.addEventListener('load', drawJoinLine);
+        window.addEventListener('resize', drawJoinLine);
+    </script>
+</body>
+</html>

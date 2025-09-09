@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LPD - Semana 10: La Fábrica de Objetos</title>
+    <!-- Incluyendo Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Incluyendo Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Incluyendo Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Fira+Code&family=Exo+2:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #111827; color: #d1d5db; }
+        .factory-title { font-family: 'Exo 2', sans-serif; }
+        .code-block { background-color: #1f2937; border-radius: 0.5rem; font-family: 'Fira-Code', monospace; padding: 1rem; font-size: 0.875rem; line-height: 1.6; border: 1px solid #374151; white-space: pre-wrap; }
+        .interactive-panel { background: rgba(31, 41, 55, 0.8); backdrop-filter: blur(10px); border: 1px solid #4b5563; }
+        .object-instance { transition: all 0.5s ease-out; opacity: 1; transform: scale(1); }
+        .object-instance.created { animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
+        @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        .tab-button { transition: all 0.2s; border-bottom: 2px solid transparent; }
+        .tab-button.active { border-color: #38bdf8; color: #38bdf8; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Contenedor Principal -->
+    <div class="container mx-auto p-4 sm:p-6 md:p-8">
+
+        <!-- Cabecera -->
+        <header class="bg-gradient-to-br from-gray-900 to-gray-800 border-2 border-sky-500 shadow-2xl shadow-sky-500/20 rounded-lg p-8 mb-8 text-center">
+            <i class="fas fa-industry text-5xl mb-4 text-sky-400"></i>
+            <h1 class="text-5xl font-bold factory-title text-white">Semana 10: La Fábrica de Objetos</h1>
+            <p class="text-xl mt-2 text-gray-400">Diseña, Construye e Interactúa con los Pilares de la POO.</p>
+        </header>
+
+        <!-- Navegación de Pilares -->
+        <div class="flex justify-center space-x-2 sm:space-x-4 mb-8">
+            <button class="tab-button active py-2 px-4 font-semibold" data-tab="clase-objeto">
+                <i class="fas fa-pencil-ruler mr-2"></i>Clase y Objeto
+            </button>
+            <button class="tab-button py-2 px-4 font-semibold" data-tab="encapsulacion">
+                <i class="fas fa-box-archive mr-2"></i>Encapsulación
+            </button>
+            <button class="tab-button py-2 px-4 font-semibold" data-tab="herencia">
+                <i class="fas fa-sitemap mr-2"></i>Herencia
+            </button>
+            <button class="tab-button py-2 px-4 font-semibold" data-tab="polimorfismo">
+                <i class="fas fa-random mr-2"></i>Polimorfismo
+            </button>
+        </div>
+
+        <!-- Contenido de los Pilares -->
+        <main>
+            <!-- 1. Taller de Clases y Objetos -->
+            <div id="clase-objeto" class="tab-content active">
+                <section class="interactive-panel p-6 rounded-lg shadow-lg">
+                    <h2 class="text-3xl font-bold factory-title text-white mb-4">Estación 1: Diseño y Manufactura</h2>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Panel de Diseño de Clase -->
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2 text-sky-400">1. Diseña el Plano (`class`)</h3>
+                            <div class="space-y-3">
+                                <input type="text" id="className" value="Coche" class="w-full p-2 bg-gray-900 border border-gray-600 rounded">
+                                <textarea id="classProps" class="w-full p-2 bg-gray-900 border border-gray-600 rounded h-24 font-mono text-sm" placeholder="public string Color { get; set; }&#10;public int Anio { get; set; }"></textarea>
+                            </div>
+                             <div class="mt-4 code-block" id="classCodeOutput"></div>
+                        </div>
+                        <!-- Panel de Manufactura de Objetos -->
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2 text-sky-400">2. Fabrica Objetos (`new`)</h3>
+                            <button id="createObjectBtn" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded transition duration-300">
+                                <i class="fas fa-plus-circle mr-2"></i>Fabricar un Coche
+                            </button>
+                            <div id="object-container" class="mt-4 space-y-3 max-h-60 overflow-y-auto pr-2">
+                                <!-- Los objetos se añadirán aquí -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- 2. Encapsulación -->
+            <div id="encapsulacion" class="tab-content">
+                <section class="interactive-panel p-6 rounded-lg shadow-lg text-center">
+                     <h2 class="text-3xl font-bold factory-title text-white mb-4">Estación 2: Control de Acceso</h2>
+                     <p class="text-gray-400 mb-6">La encapsulación protege el motor interno, exponiendo solo los controles necesarios.</p>
+                     <div class="flex justify-center items-center">
+                        <div class="bg-gray-700 p-4 rounded-l-lg">
+                            <h4 class="font-bold text-white">Exterior (Tu Formulario)</h4>
+                             <button class="mt-4 bg-green-500 text-white p-2 rounded">miCoche.Acelerar()</button>
+                        </div>
+                        <div class="text-4xl text-green-500 mx-4"><i class="fas fa-arrow-right-long"></i></div>
+                        <div class="border-4 border-dashed border-sky-500 p-8 rounded-lg relative">
+                             <span class="absolute -top-4 left-1/2 -translate-x-1/2 bg-gray-900 px-2 font-bold text-sky-500">CLASE COCHE</span>
+                             <div class="bg-gray-800 p-4 rounded">
+                                 <p class="text-green-400 font-mono">public void Acelerar()</p>
+                                 <p class="text-gray-500 font-mono mt-2">// Llama a métodos privados</p>
+                                 <p class="font-mono text-sm">inyectarCombustible();</p>
+                                 <p class="font-mono text-sm">generarChispa();</p>
+                             </div>
+                             <div class="bg-red-900/50 p-4 rounded mt-4">
+                                <p class="text-red-400 font-mono">private void inyectarCombustible()</p>
+                                <p class="text-red-400 font-mono">private void generarChispa()</p>
+                                <p class="text-gray-500 font-mono mt-2 text-sm">// ¡No se puede llamar desde fuera!</p>
+                             </div>
+                        </div>
+                     </div>
+                </section>
+            </div>
+
+            <!-- 3. Herencia -->
+            <div id="herencia" class="tab-content">
+                 <section class="interactive-panel p-6 rounded-lg shadow-lg text-center">
+                    <h2 class="text-3xl font-bold factory-title text-white mb-4">Estación 3: Línea de Especialización</h2>
+                    <p class="text-gray-400 mb-6">Crea clases especializadas que heredan y extienden la funcionalidad base.</p>
+                    <div class="flex flex-col items-center">
+                        <div class="code-block w-full max-w-md">
+                           <p><span class="text-purple-400">public class</span> <span class="text-green-400">Vehiculo</span> {</p>
+                           <p class="ml-4">public int Ruedas { get; set; }</p>
+                           <p class="ml-4">public void Mover() { ... }</p>
+                           <p>}</p>
+                        </div>
+                        <div class="text-4xl my-4 text-sky-500"><i class="fas fa-arrow-down"></i></div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-3xl">
+                             <div class="code-block">
+                                <p><span class="text-purple-400">public class</span> <span class="text-green-400">Coche</span> : <span class="text-yellow-400">Vehiculo</span> {</p>
+                                <p class="ml-4 text-gray-500">// Hereda Ruedas y Mover()</p>
+                                <p class="ml-4">public int Puertas { get; set; }</p>
+                                <p>}</p>
+                             </div>
+                             <div class="code-block">
+                                <p><span class="text-purple-400">public class</span> <span class="text-green-400">Moto</span> : <span class="text-yellow-400">Vehiculo</span> {</p>
+                                <p class="ml-4 text-gray-500">// Hereda Ruedas y Mover()</p>
+                                <p class="ml-4">public bool TieneSidecar { get; set; }</p>
+                                <p>}</p>
+                             </div>
+                        </div>
+                    </div>
+                 </section>
+            </div>
+            
+            <!-- 4. Polimorfismo -->
+            <div id="polimorfismo" class="tab-content">
+                <section class="interactive-panel p-6 rounded-lg shadow-lg">
+                    <h2 class="text-3xl font-bold factory-title text-white mb-4">Estación 4: Pista de Pruebas Universal</h2>
+                    <p class="text-gray-400 mb-6">Un mismo comando (`HacerSonido()`), múltiples comportamientos. ¡Haz clic en los animales!</p>
+                    <div class="flex justify-around items-center bg-gray-900/50 p-8 rounded-lg">
+                        <div class="text-center animal" data-sound="¡Miau!"><i class="fas fa-cat text-6xl text-orange-400 cursor-pointer"></i><p>Gato</p></div>
+                        <div class="text-center animal" data-sound="¡Guau!"><i class="fas fa-dog text-6xl text-yellow-400 cursor-pointer"></i><p>Perro</p></div>
+                        <div class="text-center animal" data-sound="¡Muuu!"><i class="fas fa-cow text-6xl text-gray-300 cursor-pointer"></i><p>Vaca</p></div>
+                    </div>
+                    <div id="sound-output" class="mt-6 text-center h-10">
+                        <p class="text-2xl font-bold text-sky-400 factory-title"></p>
+                    </div>
+                </section>
+            </div>
+
+        </main>
+
+        <!-- Navegación -->
+        <footer class="mt-12">
+            <div class="flex justify-between items-center bg-gray-800 p-4 rounded-lg shadow-md">
+                <a href="semana-09.html" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition duration-300 flex items-center"><i class="fas fa-arrow-left mr-2"></i>Anterior</a>
+                <span class="text-gray-700 font-semibold">Semana 10 de 18</span>
+                <a href="semana-11.html" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded transition duration-300 flex items-center">Siguiente<i class="fas fa-arrow-right ml-2"></i></a>
+            </div>
+             <div class="text-center mt-4 text-sm text-gray-500">
+                <p>Instituto de Educación Superior Tecnológico Público "Carlos Salazar Romero"</p>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        // --- Lógica del Taller Interactivo ---
+        const classNameInput = document.getElementById('className');
+        const classPropsInput = document.getElementById('classProps');
+        const classCodeOutput = document.getElementById('classCodeOutput');
+        const createObjectBtn = document.getElementById('createObjectBtn');
+        const objectContainer = document.getElementById('object-container');
+        let objectCounter = 0;
+
+        function updateClassCode() {
+            const name = classNameInput.value || 'MiClase';
+            const props = classPropsInput.value.split('\n').map(p => p.trim() ? `    ${p}` : '').join('\n');
+            classCodeOutput.innerHTML = `<span class="text-purple-400">public class</span> <span class="text-green-400">${name}</span> {\n${props}\n}`;
+            createObjectBtn.innerHTML = `<i class="fas fa-plus-circle mr-2"></i>Fabricar un ${name}`;
+        }
+
+        function createObjectInstance() {
+            objectCounter++;
+            const name = classNameInput.value || 'MiClase';
+            const objectId = `obj-${objectCounter}`;
+            
+            const objectHTML = `
+                <div id="${objectId}" class="object-instance interactive-panel p-3 rounded-md created">
+                    <p class="font-bold text-white">${name} <span class="text-gray-400">#${objectCounter}</span></p>
+                    <p class="text-xs font-mono text-sky-300">${name} miObjeto${objectCounter} = new ${name}();</p>
+                </div>
+            `;
+            objectContainer.insertAdjacentHTML('beforeend', objectHTML);
+        }
+
+        classNameInput.addEventListener('input', updateClassCode);
+        classPropsInput.addEventListener('input', updateClassCode);
+        createObjectBtn.addEventListener('click', createObjectInstance);
+        
+        updateClassCode();
+
+        // --- Lógica de Pestañas (Tabs) ---
+        const tabs = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                const target = document.getElementById(tab.dataset.tab);
+                tabContents.forEach(c => c.classList.remove('active'));
+                target.classList.add('active');
+            });
+        });
+        
+        // --- Lógica de Polimorfismo ---
+        const animals = document.querySelectorAll('.animal');
+        const soundOutput = document.getElementById('sound-output').querySelector('p');
+
+        animals.forEach(animal => {
+            animal.addEventListener('click', () => {
+                const sound = animal.dataset.sound;
+                soundOutput.textContent = sound;
+                soundOutput.style.animation = 'none';
+                soundOutput.offsetHeight; // Trigger reflow
+                soundOutput.style.animation = 'fadeIn 0.5s';
+            });
+        });
+
+    </script>
+</body>
+</html>

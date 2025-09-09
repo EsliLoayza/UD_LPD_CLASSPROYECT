@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LPD - Semana 09: De Arquitecto a Constructor</title>
+    <!-- Incluyendo Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Incluyendo Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Incluyendo Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Fira+Code&family=Architects+Daughter&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #e0e7ff; }
+        .blueprint-bg { background-color: #3b5998; background-image: linear-gradient(rgba(255,255,255,.07) 2px, transparent 2px), linear-gradient(90deg, rgba(255,255,255,.07) 2px, transparent 2px), linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px); background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px; background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px; }
+        .architect-font { font-family: 'Architects Daughter', cursive; }
+        .code-block { background-color: #1e293b; color: #cbd5e1; border-radius: 0.5rem; font-family: 'Fira-Code', monospace; padding: 1.25rem; font-size: 0.875rem; line-height: 1.6; border: 1px solid #475569; }
+        .diagram-box { cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; }
+        .diagram-box:hover, .diagram-box.active { border-color: #f59e0b; transform: scale(1.05); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2); }
+        .tab-button { transition: all 0.2s; }
+        .tab-button.active { background-color: #f59e0b; color: #1e293b; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body class="antialiased text-gray-800">
+
+    <!-- Contenedor Principal -->
+    <div class="container mx-auto p-4 sm:p-6 md:p-8">
+
+        <!-- Cabera -->
+        <header class="blueprint-bg text-white shadow-xl rounded-lg p-8 mb-8 text-center border-4 border-white/50">
+            <i class="fas fa-drafting-compass text-5xl mb-4 text-amber-300"></i>
+            <h1 class="text-4xl font-bold architect-font tracking-wider">Semana 09: La Mesa del Arquitecto</h1>
+            <p class="text-xl mt-2">Traduciendo planos UML en aplicaciones robustas.</p>
+        </header>
+
+        <!-- Contenido Principal -->
+        <main class="space-y-12">
+            
+            <!-- Mesa del Arquitecto Interactivo -->
+            <section class="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2 flex items-center">
+                    <i class="fas fa-map-marked-alt text-blue-600 mr-3"></i>Explorador de Planos: Sistema de Blog
+                </h2>
+                <p class="text-gray-600 mb-6">Haz clic en los diagramas para ver cómo se conectan con la implementación real.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Diagrama de Casos de Uso -->
+                    <div id="usecase-box" class="diagram-box p-4 bg-gray-50 rounded-lg text-center">
+                        <h3 class="font-bold text-lg architect-font">Diagrama de Casos de Uso</h3>
+                        <img src="https://placehold.co/400x250/f0f9ff/3b82f6?text=Caso+de+Uso\n(Clic+aquí)" alt="Diagrama de Casos de Uso" class="mx-auto mt-2 rounded">
+                    </div>
+                    <!-- Diagrama de Clases -->
+                    <div id="class-box" class="diagram-box p-4 bg-gray-50 rounded-lg text-center">
+                        <h3 class="font-bold text-lg architect-font">Diagrama de Clases</h3>
+                        <img src="https://placehold.co/400x250/f0f9ff/3b82f6?text=Diagrama+de+Clases\n(Clic+aquí)" alt="Diagrama de Clases" class="mx-auto mt-2 rounded">
+                    </div>
+                </div>
+
+                <!-- Zona de Traducción -->
+                <div id="translation-zone" class="mt-8 p-6 bg-slate-100 rounded-lg" style="display: none;">
+                    <div class="flex border-b border-gray-300 mb-4">
+                        <button id="tab-db" class="tab-button py-2 px-4 font-semibold">Traducción a Base de Datos <i class="fas fa-database ml-2"></i></button>
+                        <button id="tab-ui" class="tab-button py-2 px-4 font-semibold">Traducción a Interfaz <i class="fas fa-desktop ml-2"></i></button>
+                    </div>
+                    <!-- Contenido de las Pestañas -->
+                    <div id="content-db" class="tab-content">
+                        <h4 class="text-xl font-bold mb-2">Diagrama de Clases <i class="fas fa-arrow-right"></i> Script SQL</h4>
+                        <p class="mb-4">Cada clase se convierte en una tabla. Los atributos son las columnas. La relación 1-a-Muchos se crea con una Clave Foránea.</p>
+                        <div class="code-block">
+                            <pre><code>-- De la Clase 'Articulo'
+<span class="text-purple-400">CREATE TABLE</span> <span class="text-green-400">articulos</span> (
+  <span class="text-blue-400">id_articulo</span> INT PRIMARY KEY AUTO_INCREMENT,
+  <span class="text-blue-400">titulo</span> VARCHAR(255) NOT NULL,
+  <span class="text-blue-400">contenido</span> TEXT,
+  <span class="text-blue-400">fecha</span> DATETIME
+);
+
+-- De la Clase 'Comentario'
+<span class="text-purple-400">CREATE TABLE</span> <span class="text-green-400">comentarios</span> (
+  <span class="text-blue-400">id_comentario</span> INT PRIMARY KEY AUTO_INCREMENT,
+  <span class="text-blue-400">texto</span> VARCHAR(500),
+  <span class="text-blue-400">fecha</span> DATETIME,
+  <span class="text-red-400">id_articulo</span> INT,  <span class="text-gray-500">-- Clave Foránea</span>
+  <span class="text-purple-400">FOREIGN KEY</span> (<span class="text-red-400">id_articulo</span>) <span class="text-purple-400">REFERENCES</span> articulos(<span class="text-blue-400">id_articulo</span>)
+);</code></pre>
+                        </div>
+                    </div>
+                    <div id="content-ui" class="tab-content">
+                         <h4 class="text-xl font-bold mb-2">Caso de Uso <i class="fas fa-arrow-right"></i> Formulario WinForms</h4>
+                         <p class="mb-4">El caso de uso "Gestionar Artículo" nos indica la necesidad de un formulario de mantenimiento con campos para cada atributo y botones para las acciones CRUD.</p>
+                         <img src="https://placehold.co/600x350/ffffff/9ca3af?text=Mockup+del+Formulario+Gestionar+Artículo" alt="Mockup de Formulario" class="mx-auto rounded border-2 border-gray-300">
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Flujo de Trabajo -->
+            <section class="bg-gray-800 text-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-3xl font-bold mb-4 architect-font text-center">Nuestro Flujo de Trabajo Profesional</h2>
+                <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-8 mt-6">
+                    <div class="text-center">
+                        <div class="bg-amber-400 text-gray-900 rounded-full w-24 h-24 flex items-center justify-center text-4xl font-bold">1</div>
+                        <p class="font-bold mt-2">Leer Planos UML</p>
+                    </div>
+                    <i class="fas fa-chevron-right text-3xl text-gray-500 transform md:rotate-0 rotate-90"></i>
+                    <div class="text-center">
+                        <div class="bg-amber-400 text-gray-900 rounded-full w-24 h-24 flex items-center justify-center text-4xl font-bold">2</div>
+                        <p class="font-bold mt-2">Crear BD y Tablas</p>
+                    </div>
+                    <i class="fas fa-chevron-right text-3xl text-gray-500 transform md:rotate-0 rotate-90"></i>
+                    <div class="text-center">
+                        <div class="bg-amber-400 text-gray-900 rounded-full w-24 h-24 flex items-center justify-center text-4xl font-bold">3</div>
+                        <p class="font-bold mt-2">Diseñar Formularios</p>
+                    </div>
+                    <i class="fas fa-chevron-right text-3xl text-gray-500 transform md:rotate-0 rotate-90"></i>
+                     <div class="text-center">
+                        <div class="bg-amber-400 text-gray-900 rounded-full w-24 h-24 flex items-center justify-center text-4xl font-bold">4</div>
+                        <p class="font-bold mt-2">Codificar Lógica</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Navegación -->
+        <footer class="mt-12">
+            <div class="flex justify-between items-center bg-white p-4 rounded-lg shadow-md">
+                <a href="semana-08.html" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition duration-300 flex items-center"><i class="fas fa-arrow-left mr-2"></i>Anterior</a>
+                <span class="text-gray-700 font-semibold">Semana 9 de 18</span>
+                <a href="semana-10.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 flex items-center">Siguiente<i class="fas fa-arrow-right ml-2"></i></a>
+            </div>
+             <div class="text-center mt-4 text-sm text-gray-500">
+                <p>Instituto de Educación Superior Tecnológico Público "Carlos Salazar Romero"</p>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        const useCaseBox = document.getElementById('usecase-box');
+        const classBox = document.getElementById('class-box');
+        const translationZone = document.getElementById('translation-zone');
+        
+        const tabDb = document.getElementById('tab-db');
+        const tabUi = document.getElementById('tab-ui');
+        const contentDb = document.getElementById('content-db');
+        const contentUi = document.getElementById('content-ui');
+
+        function showTranslation(view) {
+            translationZone.style.display = 'block';
+            if (view === 'class') {
+                classBox.classList.add('active');
+                useCaseBox.classList.remove('active');
+                tabDb.classList.add('active');
+                tabUi.classList.remove('active');
+                contentDb.classList.add('active');
+                contentUi.classList.remove('active');
+            } else { // 'usecase'
+                useCaseBox.classList.add('active');
+                classBox.classList.remove('active');
+                tabUi.classList.add('active');
+                tabDb.classList.remove('active');
+                contentUi.classList.add('active');
+                contentDb.classList.remove('active');
+            }
+        }
+
+        useCaseBox.addEventListener('click', () => showTranslation('usecase'));
+        classBox.addEventListener('click', () => showTranslation('class'));
+
+        tabDb.addEventListener('click', () => {
+             classBox.classList.add('active');
+             useCaseBox.classList.remove('active');
+             tabDb.classList.add('active');
+             tabUi.classList.remove('active');
+             contentDb.classList.add('active');
+             contentUi.classList.remove('active');
+        });
+        
+        tabUi.addEventListener('click', () => {
+             useCaseBox.classList.add('active');
+             classBox.classList.remove('active');
+             tabUi.classList.add('active');
+             tabDb.classList.remove('active');
+             contentUi.classList.add('active');
+             contentDb.classList.remove('active');
+        });
+    </script>
+</body>
+</html>

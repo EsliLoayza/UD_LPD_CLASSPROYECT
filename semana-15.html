@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LPD - Semana 15: Simulación SDLC</title>
+    <!-- Incluyendo Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Incluyendo Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Incluyendo Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Fira+Code&family=Exo+2:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #111827; color: #d1d5db; }
+        .exo-title { font-family: 'Exo-2', sans-serif; }
+        .step { display: none; }
+        .step.active { display: block; animation: fadeIn 0.6s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .progress-bar-bg { background-color: #374151; }
+        .progress-bar-fill { background-color: #3b82f6; transition: width 0.5s ease-in-out; }
+        .req-word { cursor: pointer; transition: all 0.2s; border-bottom: 2px dotted #4b5563; }
+        .req-word:hover { background-color: #374151; }
+        .entity-box { background-color: #1f2937; border: 1px solid #4b5563; padding: 0.5rem 1rem; border-radius: 0.5rem; transition: all 0.2s; }
+        .entity-box.selected { background-color: #3b82f6; color: white; border-color: #60a5fa; }
+        .component-slot { border: 2px dashed #4b5563; transition: all 0.2s; }
+        .component-slot.over { background-color: #374151; border-color: #60a5fa; }
+        .component-drag { cursor: grab; }
+        .btn-primary { background-color: #3b82f6; color: white; font-weight: bold; padding: 0.75rem 1.5rem; border-radius: 0.5rem; transition: background-color 0.2s; }
+        .btn-primary:hover { background-color: #2563eb; }
+        .btn-secondary { background-color: #4b5563; }
+        .btn-secondary:hover { background-color: #6b7280; }
+        .connector-line { stroke: #6b7280; stroke-width: 2; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Contenedor Principal -->
+    <div class="container mx-auto p-4 sm:p-6 md:p-8">
+        <!-- Cabecera -->
+        <header class="bg-gray-900 border border-blue-500 shadow-lg shadow-blue-500/10 rounded-lg p-8 mb-8 text-center">
+            <i class="fas fa-rocket text-5xl mb-4 text-blue-400"></i>
+            <h1 class="text-5xl font-bold exo-title text-white">Semana 15: Simulación del Ciclo de Vida</h1>
+            <p class="text-xl mt-2 text-gray-400">De la Idea al Producto: Completa el ciclo de desarrollo.</p>
+        </header>
+
+        <!-- Dashboard del Proyecto -->
+        <div class="bg-gray-800 rounded-lg p-6 mb-8">
+            <h2 class="text-xl font-bold text-white mb-4">Progreso del Proyecto: "Gestor de Tareas"</h2>
+            <div class="progress-bar-bg w-full h-4 rounded-full">
+                <div id="progressBar" class="progress-bar-fill h-4 rounded-full" style="width: 0%;"></div>
+            </div>
+            <div id="progressText" class="text-right text-sm mt-1 font-semibold text-blue-300">0% - Fase de Requisitos</div>
+        </div>
+
+        <!-- Contenedor de Pasos -->
+        <div id="simulation-container" class="bg-gray-800 rounded-lg p-6 min-h-[400px]">
+            <!-- Paso 1: Requisitos -->
+            <div id="step1" class="step active">
+                <h3 class="text-2xl font-bold exo-title text-white mb-4">Fase 1: Análisis de Requisitos</h3>
+                <p class="mb-4 text-gray-400">Lee la solicitud del cliente y selecciona los sustantivos que representan las entidades principales (Clases) del sistema.</p>
+                <div class="bg-gray-900 p-6 rounded-lg border border-gray-700">
+                    <p class="text-lg leading-relaxed">"Necesito un sistema para gestionar <span class="req-word" data-entity="Tarea">tareas</span>. Cada <span class="req-word" data-entity="Tarea">tarea</span> tiene una <span class="req-word">descripción</span>, una <span class="req-word">fecha de vencimiento</span> y un <span class="req-word">estado</span> (pendiente, en progreso, completada). Las <span class="req-word" data-entity="Tarea">tareas</span> se agrupan en <span class="req-word" data-entity="Proyecto">proyectos</span>. Un <span class="req-word" data-entity="Proyecto">proyecto</span> tiene un <span class="req-word">nombre</span>. Además, las <span class="req-word" data-entity="Tarea">tareas</span> son asignadas a <span class="req-word" data-entity="Usuario">usuarios</span>. De cada <span class="req-word" data-entity="Usuario">usuario</span> guardamos su <span class="req-word">nombre</span>."</p>
+                </div>
+                <div class="text-center mt-6">
+                    <button onclick="goToStep(2, ['Tarea', 'Proyecto', 'Usuario'])" class="btn-primary">Validar y Continuar <i class="fas fa-arrow-right ml-2"></i></button>
+                </div>
+            </div>
+
+            <!-- Paso 2: Diseño de Clases -->
+            <div id="step2" class="step">
+                <h3 class="text-2xl font-bold exo-title text-white mb-4">Fase 2: Diseño Lógico (Diagrama de Clases)</h3>
+                <p class="mb-4 text-gray-400">Las entidades identificadas son: <strong id="identifiedEntities" class="text-blue-400"></strong>. Ahora, conecta las clases para representar sus relaciones.</p>
+                <div class="relative h-64" id="class-diagram-canvas">
+                    <!-- Clases se añadirán aquí -->
+                    <svg id="class-svg" class="absolute top-0 left-0 w-full h-full"></svg>
+                </div>
+                 <div class="text-center mt-6">
+                    <button onclick="goToStep(3)" class="btn-primary">Validar y Continuar <i class="fas fa-arrow-right ml-2"></i></button>
+                </div>
+            </div>
+
+            <!-- Paso 3: Diseño de Componentes -->
+            <div id="step3" class="step">
+                <h3 class="text-2xl font-bold exo-title text-white mb-4">Fase 3: Diseño Físico (Arquitectura)</h3>
+                <p class="mb-4 text-gray-400">Arrastra los componentes a sus ranuras correctas en la arquitectura de 3 capas.</p>
+                <div class="flex justify-around items-center h-64">
+                    <div class="space-y-4">
+                        <div class="component-drag entity-box" draggable="true" data-component="UI">GestorTareas.exe (UI)</div>
+                        <div class="component-drag entity-box" draggable="true" data-component="BLL">Logica.dll (BLL)</div>
+                        <div class="component-drag entity-box" draggable="true" data-component="DAL">Datos.dll (DAL)</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="component-slot w-48 h-16 mb-2 flex justify-center items-center" data-slot="UI">Capa de Presentación</div>
+                        <i class="fas fa-arrow-down text-gray-500 my-2"></i>
+                        <div class="component-slot w-48 h-16 mb-2 flex justify-center items-center" data-slot="BLL">Capa de Lógica</div>
+                        <i class="fas fa-arrow-down text-gray-500 my-2"></i>
+                        <div class="component-slot w-48 h-16 flex justify-center items-center" data-slot="DAL">Capa de Datos</div>
+                    </div>
+                </div>
+                 <div class="text-center mt-6">
+                    <button onclick="goToStep(4)" class="btn-primary">Validar y Continuar <i class="fas fa-arrow-right ml-2"></i></button>
+                </div>
+            </div>
+            
+            <!-- Paso 4: Final -->
+            <div id="step4" class="step text-center">
+                 <h3 class="text-2xl font-bold exo-title text-white mb-4">¡Proyecto Compilado con Éxito!</h3>
+                 <i class="fas fa-trophy text-8xl text-yellow-400 mb-6"></i>
+                 <p class="text-lg text-gray-300">Has completado con éxito la simulación del ciclo de vida de desarrollo de software.<br>¡Estás listo para tu proyecto final!</p>
+                 <div class="text-center mt-8">
+                    <button onclick="resetSimulation()" class="btn-primary bg-green-600 hover:bg-green-700">Reiniciar Simulación <i class="fas fa-redo ml-2"></i></button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navegación -->
+        <footer class="mt-12">
+            <div class="flex justify-between items-center bg-gray-900 p-4 rounded-lg shadow-md">
+                <a href="semana-14.html" class="btn-primary btn-secondary"><i class="fas fa-arrow-left mr-2"></i>Anterior</a>
+                <span class="font-semibold text-gray-500">Semana 15 de 18</span>
+                <a href="semana-16.html" class="btn-primary">Siguiente<i class="fas fa-arrow-right ml-2"></i></a>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        let currentStep = 1;
+        const totalSteps = 4;
+        const selectedEntities = new Set();
+
+        // --- Step Navigation & Progress ---
+        function updateProgress(step) {
+            currentStep = step;
+            const progress = ((step - 1) / (totalSteps-1)) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            const phases = ["Requisitos", "Diseño Lógico", "Diseño Físico", "Completado"];
+            document.getElementById('progressText').innerText = `${Math.round(progress)}% - Fase de ${phases[step-1]}`;
+            
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.getElementById(`step${step}`).classList.add('active');
+        }
+        
+        function goToStep(step, validationData = null) {
+            if(validateStep(currentStep, validationData)){
+                 updateProgress(step);
+                 if(step === 2) setupStep2(validationData);
+                 if(step === 3) setupStep3();
+            } else {
+                alert('Validación fallida. Por favor, completa el paso correctamente.');
+            }
+        }
+        
+        function validateStep(step, data){
+            if (step === 1) {
+                return data.every(entity => selectedEntities.has(entity)) && data.length === selectedEntities.size;
+            }
+            if (step === 3) {
+                 const uiSlot = document.querySelector('[data-slot="UI"]').dataset.component;
+                 const bllSlot = document.querySelector('[data-slot="BLL"]').dataset.component;
+                 const dalSlot = document.querySelector('[data-slot="DAL"]').dataset.component;
+                 return uiSlot === 'UI' && bllSlot === 'BLL' && dalSlot === 'DAL';
+            }
+            return true; // For steps without validation
+        }
+
+        function resetSimulation(){
+            selectedEntities.clear();
+            document.querySelectorAll('.req-word.selected').forEach(el => el.classList.remove('selected'));
+            document.querySelectorAll('.component-slot').forEach(s => {
+                s.innerHTML = `Capa de ${s.dataset.slot === 'UI' ? 'Presentación' : (s.dataset.slot === 'BLL' ? 'Lógica' : 'Datos')}`;
+                delete s.dataset.component;
+            });
+            document.querySelectorAll('.component-drag').forEach(d => d.style.display = 'block');
+            updateProgress(1);
+        }
+
+        // --- Step 1 Logic ---
+        document.querySelectorAll('.req-word').forEach(word => {
+            word.addEventListener('click', () => {
+                const entity = word.dataset.entity;
+                if(entity){
+                    word.classList.toggle('selected');
+                    if (selectedEntities.has(entity)) {
+                        selectedEntities.delete(entity);
+                    } else {
+                        selectedEntities.add(entity);
+                    }
+                }
+            });
+        });
+
+        // --- Step 2 Logic ---
+        function setupStep2(entities) {
+             document.getElementById('identifiedEntities').innerText = entities.join(', ');
+             const canvas = document.getElementById('class-diagram-canvas');
+             const svg = document.getElementById('class-svg');
+             canvas.innerHTML = '';
+             canvas.appendChild(svg);
+             svg.innerHTML = '';
+
+             const positions = {
+                [entities[0]]: {x: 150, y: 100}, // Tarea
+                [entities[1]]: {x: 350, y: 20},  // Proyecto
+                [entities[2]]: {x: 350, y: 180}  // Usuario
+             };
+
+             entities.forEach(entity => {
+                const box = document.createElement('div');
+                box.className = 'entity-box absolute';
+                box.innerText = entity;
+                box.style.left = `${positions[entity].x}px`;
+                box.style.top = `${positions[entity].y}px`;
+                canvas.appendChild(box);
+             });
+             
+             // Draw lines
+             const tareaPos = positions[entities[0]];
+             const proyectoPos = positions[entities[1]];
+             const usuarioPos = positions[entities[2]];
+             
+             drawLine(tareaPos.x + 80, tareaPos.y + 20, proyectoPos.x, proyectoPos.y + 20);
+             drawLine(tareaPos.x + 80, tareaPos.y + 20, usuarioPos.x, usuarioPos.y + 20);
+        }
+        function drawLine(x1, y1, x2, y2) {
+             const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+             line.setAttribute('x1', x1); line.setAttribute('y1', y1);
+             line.setAttribute('x2', x2); line.setAttribute('y2', y2);
+             line.setAttribute('class', 'connector-line');
+             document.getElementById('class-svg').appendChild(line);
+        }
+
+        // --- Step 3 Logic ---
+        function setupStep3() {
+            const draggables = document.querySelectorAll('.component-drag');
+            const dropzones = document.querySelectorAll('.component-slot');
+            let draggedItem = null;
+
+            draggables.forEach(draggable => {
+                draggable.addEventListener('dragstart', (e) => {
+                    draggedItem = e.target;
+                    setTimeout(() => e.target.style.display = 'none', 0);
+                });
+                draggable.addEventListener('dragend', () => {
+                    setTimeout(() => {
+                        if(draggedItem) draggedItem.style.display = 'block';
+                        draggedItem = null;
+                    }, 0);
+                });
+            });
+            
+            dropzones.forEach(zone => {
+                zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('over'); });
+                zone.addEventListener('dragleave', () => zone.classList.remove('over'));
+                zone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    zone.classList.remove('over');
+                    if(draggedItem) {
+                        zone.innerHTML = draggedItem.innerHTML;
+                        zone.dataset.component = draggedItem.dataset.component;
+                        draggedItem = null;
+                    }
+                });
+            });
+        }
+        
+        // --- Initial Call ---
+        window.onload = () => updateProgress(1);
+
+    </script>
+</body>
+</html>
