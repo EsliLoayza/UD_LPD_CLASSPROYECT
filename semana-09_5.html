@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Interactiva 9.5: Puente a la Sesión 10</title>
+    <style>
+        @keyframes animated-gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+            line-height: 1.7;
+            color: #f0e6ff;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(-45deg, #ff8c00, #ff00ff, #4b0082, #ff4500);
+            background-size: 400% 400%;
+            animation: animated-gradient 15s ease infinite;
+        }
+        .container {
+            max-width: 950px;
+            margin: auto;
+            background: rgba(18, 9, 26, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(255, 0, 255, 0.37);
+            border: 2px solid rgba(255, 255, 255, 0.18);
+        }
+        h1, h2 {
+            font-family: 'Arial Black', Gadget, sans-serif;
+            text-align: center;
+            color: #ff9800;
+            text-shadow: 0 0 5px #ff9800, 0 0 10px #ff00ff;
+            border-bottom: 2px solid;
+            border-image: linear-gradient(to right, #ff8c00, #ff00ff) 1;
+            padding-bottom: 15px;
+            margin-bottom: 1.5em;
+        }
+        details {
+            background: rgba(40, 20, 60, 0.7);
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            border: 1px solid #ff00ff;
+            transition: all 0.3s ease;
+        }
+        details:hover {
+            box-shadow: 0 0 15px #ff00ff;
+        }
+        summary {
+            font-weight: bold;
+            font-size: 1.3em;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            outline: none;
+            color: #f5b9ff;
+            text-shadow: 0 0 3px #f5b9ff;
+        }
+        .content {
+            padding: 0 1.5rem 1.5rem 1.5rem;
+            border-top: 1px dashed rgba(255, 0, 255, 0.5);
+            margin: 0 1rem;
+        }
+        pre {
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #e0e0e0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            white-space: pre;
+            font-family: "Fira Code", "Consolas", "Monaco", monospace;
+            font-size: 1em;
+            border: 1px solid #ff9800;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        }
+        p, li {
+            font-size: 1.1em;
+        }
+        .actor { color: #ffd700; font-weight: bold; }
+        .use-case { color: #9acd32; }
+        .class-name { color: #ff69b4; font-weight: bold; }
+        .attribute { color: #add8e6; }
+        .sql-keyword { color: #f92672; }
+        .sql-type { color: #66d9ef; }
+        .sql-comment { color: #75715e; font-style: italic; }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 0, 255, 0.3);
+        }
+        .nav-button {
+            background: linear-gradient(45deg, #da00ff, #ff8c00);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 0 8px #ff00ff, 0 0 12px #ff8c00;
+            transition: all 0.3s ease;
+        }
+        .nav-button:hover {
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 0 15px #ff00ff, 0 0 25px #ff8c00;
+        }
+        .signature {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 2em;
+            color: #ff9800;
+            text-shadow: 0 0 5px #ff00ff;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Guía Interactiva 9.5: De Constructor a Visionario</h1>
+        <p>Esta es una versión mejorada de la guía de la Semana 09. Hemos refinado los conceptos y le hemos dado un toque visual para prepararte para el siguiente nivel. ¡Usa los botones de navegación para moverte entre las sesiones!</p>
+
+        <!-- Sección 1: Diagramas UML en ASCII -->
+        <details open>
+            <summary>Paso 1: Decodificando el Cosmos (Diagramas ASCII)</summary>
+            <div class="content">
+                <h2>Diagramas UML en formato ASCII </h2>
+                
+                <h3>Diagrama de Casos de Uso: ¿La Voluntad del Sistema?</h3>
+                <pre>
+  <span class="actor">
+      /~\
+     (o.o) --&gt; Jefe de Proyecto</span>
+     _`"'_
+    / | | \
+   /  | |  \
+      / \
+     /   \
+          |
+          +----( <span class="use-case">Crear Proyecto</span> )
+          |
+          +----( <span class="use-case">Asignar Tarea</span> )
+
+
+  <span class="actor">
+      /~\
+     (o_o) --&gt; Miembro de Equipo</span>
+     _`"'_
+    / | | \
+   /  | |  \
+      / \
+     /   \
+          |
+          +----( <span class="use-case">Ver Tareas Asignadas</span> )
+          |
+          +----( <span class="use-case">Actualizar Estado Tarea</span> )
+</pre>
+
+                <h3>Diagrama de Clases: ¿La Anatomía de la Realidad?</h3>
+                <pre>
++-------------------------+ 1      * +-----------------------------+
+|     <span class="class-name">Proyecto</span>          |&lt;-----------|           <span class="class-name">Tarea</span>           |
++-------------------------+          +-----------------------------+
+| <span class="attribute">PK </span>id_proyecto: INT     |          | <span class="attribute">PK </span>id_tarea: INT          |
+| <span class="attribute">   </span>nombre_proyecto: Str|          | <span class="attribute">   </span>titulo: String          |
++-------------------------+          | <span class="attribute">   </span>fecha_vencimiento: Date |
+                                     | <span class="attribute">   </span>estado: String          |
+                                     | <span class="attribute">FK </span>id_proyecto: INT      |
+                                     | <span class="attribute">FK </span>id_usuario_asignado: INT|
+                                     +-----------------------------+
+                                                     ^
+                                                     | *
+                                                     |
+                                                     | 1
++---------------------------+
+|        <span class="class-name">Usuario</span>          |
++---------------------------+
+| <span class="attribute">PK </span>id_usuario: INT     |
+| <span class="attribute">   </span>nombre_usuario: Str |
++---------------------------+
+</pre>
+            </div>
+        </details>
+
+        <!-- Sección 2: Script de la Base de Datos -->
+        <details>
+            <summary>Paso 2: Forjando la Realidad (Script SQL Mejorado)</summary>
+            <div class="content">
+                <h2>De Diagrama de Clases a Script SQL</h2>
+                <pre>
+<span class="sql-comment">-- Creamos el universo donde existirán nuestras tablas</span>
+<span class="sql-keyword">CREATE DATABASE IF NOT EXISTS</span> gestion_tareas;
+<span class="sql-keyword">USE</span> gestion_tareas;
+
+<span class="sql-comment">-- Tabla 'usuarios': Define quién puede actuar en el sistema.</span>
+<span class="sql-keyword">CREATE TABLE</span> usuarios (
+    id_usuario <span class="sql-type">INT</span> PRIMARY KEY AUTO_INCREMENT,
+    <span class="sql-comment">-- UNIQUE asegura que no haya dos usuarios con el mismo nombre. Crucial para logins.</span>
+    nombre_usuario <span class="sql-type">VARCHAR(50)</span> <span class="sql-keyword">NOT NULL UNIQUE</span>,
+    email <span class="sql-type">VARCHAR(100)</span>
+);
+
+<span class="sql-comment">-- Tabla 'proyectos': Contenedores para nuestras tareas.</span>
+<span class="sql-keyword">CREATE TABLE</span> proyectos (
+    id_proyecto <span class="sql-type">INT</span> PRIMARY KEY AUTO_INCREMENT,
+    nombre_proyecto <span class="sql-type">VARCHAR(100)</span> <span class="sql-keyword">NOT NULL</span>,
+    descripcion <span class="sql-type">TEXT</span>
+);
+
+<span class="sql-comment">-- Tabla 'tareas': El corazón del sistema. Conecta Proyectos y Usuarios.</span>
+<span class="sql-keyword">CREATE TABLE</span> tareas (
+    id_tarea <span class="sql-type">INT</span> PRIMARY KEY AUTO_INCREMENT,
+    titulo <span class="sql-type">VARCHAR(255)</span> <span class="sql-keyword">NOT NULL</span>,
+    descripcion <span class="sql-type">TEXT</span>,
+    <span class="sql-comment">-- CURRENT_DATE como valor por defecto para la fecha de creación.</span>
+    fecha_creacion <span class="sql-type">DATE DEFAULT</span> (<span class="sql-keyword">CURRENT_DATE</span>),
+    fecha_vencimiento <span class="sql-type">DATE</span>,
+    estado <span class="sql-type">VARCHAR(20)</span>,
+    
+    id_proyecto <span class="sql-type">INT</span>,
+    id_usuario_asignado <span class="sql-type">INT</span>,
+    
+    <span class="sql-comment">-- Creamos los "puentes" que aseguran la integridad de los datos.</span>
+    <span class="sql-keyword">FOREIGN KEY</span> (id_proyecto) <span class="sql-keyword">REFERENCES</span> proyectos(id_proyecto),
+    <span class="sql-keyword">FOREIGN KEY</span> (id_usuario_asignado) <span class="sql-keyword">REFERENCES</span> usuarios(id_usuario)
+);
+</pre>
+            </div>
+        </details>
+
+        <!-- Sección 3: Estructura de la Aplicación -->
+        <details>
+            <summary>Paso 3: Dando Vida a la Creación (Estructura de la App)</summary>
+            <div class="content">
+                <h2>De Diagramas a Formularios WinForms (Conceptual)</h2>
+                <h3>Formularios Necesarios:</h3>
+                <ul>
+                    <li><code>FormProyectos.cs</code>, <code>FormUsuarios.cs</code>: Formularios de soporte para gestionar las entidades base.</li>
+                    <li><code>FormTareas.cs</code>: El centro de operaciones de la aplicación.</li>
+                </ul>
+
+                <h3>El Secreto del DataGridView: El <code>INNER JOIN</code></h3>
+                <p>Para que el <code>DataGridView</code> en <code>FormTareas</code> sea útil, no puede mostrar solo IDs. Debe mostrar información legible. Aquí es donde la consulta SQL se vuelve arte:</p>
+                <pre>
+<span class="sql-keyword">SELECT</span> 
+    t.id_tarea, 
+    t.titulo, 
+    p.nombre_proyecto,  <span class="sql-comment">-- Traemos el nombre del proyecto</span>
+    u.nombre_usuario,   <span class="sql-comment">-- y el nombre del usuario</span>
+    t.fecha_vencimiento, 
+    t.estado
+<span class="sql-keyword">FROM</span> 
+    tareas t
+<span class="sql-keyword">INNER JOIN</span> proyectos p ON t.id_proyecto = p.id_proyecto
+<span class="sql-keyword">INNER JOIN</span> usuarios u ON t.id_usuario_asignado = u.id_usuario;
+</pre>
+                <p>Esta consulta une las tres tablas para crear una vista cohesiva y humana de los datos, lista para ser mostrada al usuario.</p>
+            </div>
+        </details>
+        
+        <div class="navigation">
+            <a href="semana-09.html" class="nav-button">&lt;&lt; Retroceder a Sesión 9</a>
+            <span class="signature">JLOAYZA</span>
+            <a href="semana-10.html" class="nav-button">Avanzar a Sesión 10 &gt;&gt;</a>
+        </div>
+    </div>
+
+</body>
+</html>
+
