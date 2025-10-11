@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LPD Semana 10: La Revolución de la POO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css">
+    <style>
+        :root {
+            --bg-color: #1a1a2e;
+            --primary-color: #162447;
+            --secondary-color: #1f4068;
+            --accent-color: #e43f5a;
+            --text-color: #e0e0e0;
+            --header-font: 'Orbitron', sans-serif;
+            --body-font: 'Roboto', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--body-font);
+            margin: 0;
+            padding: 0;
+            line-height: 1.7;
+        }
+        
+        #password-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            flex-direction: column;
+            transition: opacity 0.5s;
+        }
+
+        #password-box {
+            background: var(--primary-color);
+            padding: 2.5rem;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid var(--accent-color);
+            box-shadow: 0 0 20px rgba(228, 63, 90, 0.5);
+        }
+        #password-box h2 {
+            font-family: var(--header-font);
+            color: var(--accent-color);
+            margin-top: 0;
+        }
+        #password-input {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid var(--secondary-color);
+            background: #2a2a3e;
+            color: white;
+            font-size: 1rem;
+        }
+        #password-submit {
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            background: var(--accent-color);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        #contenido-protegido {
+            display: none;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .header { text-align: center; padding: 2rem 0; border-bottom: 2px solid var(--accent-color); margin-bottom: 2rem; }
+        .header h1 { font-family: var(--header-font); font-size: 2.8rem; color: var(--accent-color); text-shadow: 0 0 10px var(--accent-color); margin: 0; }
+        .header p { font-size: 1.2rem; color: #b0b0b0; }
+
+        .phase-card { background-color: var(--primary-color); border: 1px solid var(--secondary-color); border-radius: 10px; margin-bottom: 2.5rem; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .phase-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(228, 63, 90, 0.2); }
+        .phase-header { background: linear-gradient(90deg, var(--secondary-color) 0%, var(--primary-color) 100%); padding: 1rem 1.5rem; display: flex; align-items: center; }
+        .phase-header h2 { margin: 0; font-family: var(--header-font); font-size: 1.8rem; color: var(--text-color); }
+        .phase-number { font-family: var(--header-font); font-size: 2.2rem; color: var(--accent-color); margin-right: 1.5rem; text-shadow: 0 0 5px var(--accent-color); }
+        .phase-content { padding: 1.5rem 2rem; }
+
+        h3 { color: var(--accent-color); font-family: var(--header-font); border-left: 4px solid var(--accent-color); padding-left: 10px; }
+        .code-block { position: relative; }
+        .copy-button { position: absolute; top: 12px; right: 12px; background-color: #333; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; transition: background-color 0.2s; opacity: 0.7; }
+        .copy-button:hover { background-color: var(--accent-color); color: var(--bg-color); opacity: 1; }
+        pre[class*="language-"] { border-radius: 8px; border: 1px solid #444; }
+        
+        details { background: var(--secondary-color); border-radius: 8px; margin-bottom: 1rem; border: 1px solid #333; }
+        summary { padding: 1rem; cursor: pointer; font-weight: bold; font-size: 1.2rem; outline: none; transition: background-color 0.2s; }
+        summary:hover { background-color: #2a5a8a; }
+        .details-content { padding: 0 1.5rem 1.5rem 1.5rem; border-top: 1px solid #444; }
+
+        .warm-text {
+            background-color: rgba(228, 63, 90, 0.1);
+            border-left: 4px solid var(--accent-color);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .warm-text p { margin: 0; }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .comparison-grid h4 {
+            text-align: center;
+        }
+
+        .navigation-footer {
+            text-align: center;
+            margin-top: 3rem;
+        }
+        .nav-button {
+            font-family: var(--header-font);
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            background-color: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .nav-button:hover {
+            background-color: white;
+            color: var(--accent-color);
+            box-shadow: 0 0 20px var(--accent-color);
+        }
+
+        @media (max-width: 800px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="password-overlay">
+        <div id="password-box">
+            <h2>Acceso al Módulo LPD-S10</h2>
+            <p>Por favor, ingrese la nueva contraseña de docente.</p>
+            <input type="password" id="password-input" placeholder="Contraseña...">
+            <button id="password-submit">Acceder</button>
+        </div>
+    </div>
+
+    <div id="contenido-protegido">
+        <header class="header">
+            <h1>Módulo Interactivo LPD - Semana 10</h1>
+            <p>La Revolución del Software: Programación Orientada a Objetos (POO)</p>
+        </header>
+
+        <main>
+             <!-- Fase 0: El Concepto -->
+            <section class="phase-card">
+                 <div class="phase-header">
+                    <span class="phase-number">0</span>
+                    <h2>El "Porqué": Entendiendo la Refactorización</h2>
+                </div>
+                <div class="phase-content">
+                    <h3>¿Qué es Refactorizar y por qué es tan importante?</h3>
+                    <div class="warm-text">
+                        <p><strong>Analogía del Cocinero:</strong> Imagina un cocinero increíblemente talentoso que trabaja en una cocina desordenada. Guarda los cuchillos en el horno, las especias debajo del fregadero y los platos en el congelador. ¿Puede cocinar? Sí. ¿Es eficiente? No. ¿Podría otro cocinero entender su sistema? Jamás. <br><br><strong>Refactorizar es ordenar la cocina.</strong> No cambiamos la receta (el programa sigue haciendo lo mismo), pero colocamos cada utensilio en su lugar correcto. Creamos una clase `Empleado` que es nuestro "cajón de cuchillos": contiene todo lo relacionado con un empleado. El Formulario `Form1` se convierte en el "Chef", que ahora sabe exactamente dónde encontrar cada herramienta que necesita. El resultado es un código más limpio, seguro y fácil de entender para ti y para otros programadores.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Fase 1: El Plano -->
+            <section class="phase-card">
+                 <div class="phase-header">
+                    <span class="phase-number">1</span>
+                    <h2>Creando el Plano (La Clase `Empleado.cs`)</h2>
+                </div>
+                <div class="phase-content">
+                    <h3>Abstracción y Encapsulación en Acción</h3>
+                     <div class="warm-text">
+                        <p><strong>Explicación Pedagógica:</strong> Este es nuestro primer acto de **Abstracción**. Creamos un "molde" (`class Empleado`) que define qué es un empleado en nuestro sistema. Las `Propiedades` son sus características (el ADN) y los `Métodos` son sus habilidades (lo que puede hacer). Al definir la lógica de validación dentro de la clase (`EsValido`), aplicamos la **Encapsulación**: la clase misma es responsable de su propia integridad. El formulario ya no necesita saber *cómo* se valida un empleado, solo necesita *preguntarle* si es válido.</p>
+                    </div>
+                    <div class="code-block">
+                        <button class="copy-button" onclick="copyCode(this)">Copiar</button>
+                        <pre><code class="language-csharp">
+// En el Explorador de Soluciones, clic derecho en el proyecto -> Agregar -> Clase...
+// Nombrar el archivo: Empleado.cs
+
+using System;
+
+public class Empleado
+{
+    // 1. PROPIEDADES (Datos / Atributos)
+    // Son las características que describen al objeto.
+    // { get; set; } es un atajo para permitir leer (get) y escribir (set) su valor.
+    public int Id { get; set; }
+    public string Nombre { get; set; }
+    public string Apellido { get; set; }
+    public string Cargo { get; set; }
+    public DateTime FechaContratacion { get; set; }
+
+    // 2. MÉTODOS (Comportamiento / Acciones)
+    // Son las cosas que el objeto Empleado puede HACER.
+
+    /// <summary>
+    /// Devuelve el nombre completo del empleado.
+    /// </summary>
+    /// <returns>Un string con el nombre y el apellido concatenados.</returns>
+    public string NombreCompleto()
+    {
+        return Nombre + " " + Apellido;
+    }
+
+    /// <summary>
+    /// Valida si el objeto Empleado tiene la información mínima requerida.
+    /// </summary>
+    /// <returns>True si los datos son válidos, de lo contrario False.</returns>
+    public bool EsValido()
+    {
+        // La lógica de negocio ahora vive aquí, dentro de la clase.
+        // Si el nombre, apellido o cargo están vacíos o son solo espacios, no es válido.
+        if (string.IsNullOrWhiteSpace(Nombre) || 
+            string.IsNullOrWhiteSpace(Apellido) || 
+            string.IsNullOrWhiteSpace(Cargo))
+        {
+            return false; // No es válido
+        }
+        
+        return true; // Si pasó todas las validaciones, es válido.
+    }
+}
+                        </code></pre>
+                    </div>
+                </div>
+            </section>
+
+             <!-- Fase 2: La Refactorización -->
+            <section class="phase-card">
+                 <div class="phase-header">
+                    <span class="phase-number">2</span>
+                    <h2>La Refactorización (Usando Objetos en `Form1.cs`)</h2>
+                </div>
+                <div class="phase-content">
+                    <h3>Análisis Comparativo del Código</h3>
+                    <div class="warm-text">
+                        <p><strong>Enfoque Pedagógico:</strong> A continuación, verás el "Antes" y el "Después" de nuestro método `btnGuardar_Click`. Observa cómo en la versión "Antes", la lógica de la base de datos está mezclada con la lógica de la interfaz (`txtNombre.Text`). En la versión "Después", el método es un director de orquesta: crea un objeto, lo puebla, lo valida y luego usa ese objeto para comunicarse con la base de datos. Las responsabilidades están claramente separadas.</p>
+                    </div>
+                    <div class="comparison-grid">
+                        <div>
+                            <h4>ANTES (Código Mezclado)</h4>
+                            <div class="code-block">
+                                <pre><code class="language-csharp">
+private void btnGuardar_Click_OLD(...)
+{
+    // Validación mezclada
+    if (string.IsNullOrWhiteSpace(txtNombre.Text))
+    {
+        MessageBox.Show("El nombre es requerido");
+        return;
+    }
+    
+    // ... más validaciones ...
+
+    string query = "INSERT ... VALUES (@nombre, ...)";
+    MySqlCommand command = ...
+    
+    // Parámetros directos desde la UI
+    command.Parameters.AddWithValue("@nombre", txtNombre.Text);
+    command.Parameters.AddWithValue("@apellido", txtApellido.Text);
+    // ...
+}
+                                </code></pre>
+                            </div>
+                        </div>
+                        <div>
+                            <h4>DESPUÉS (Código Organizado con POO)</h4>
+                             <div class="code-block">
+                                <pre><code class="language-csharp">
+private void btnGuardar_Click_NEW(...)
+{
+    // Creación del objeto
+    Empleado nuevoEmpleado = new Empleado();
+    nuevoEmpleado.Nombre = txtNombre.Text;
+    nuevoEmpleado.Apellido = txtApellido.Text;
+    // ...
+    
+    // Validación delegada al objeto
+    if (!nuevoEmpleado.EsValido())
+    {
+        MessageBox.Show("Datos incompletos");
+        return;
+    }
+    
+    string query = "INSERT ... VALUES (@nombre, ...)";
+    MySqlCommand command = ...
+
+    // Parámetros desde el objeto
+    command.Parameters.AddWithValue("@nombre", nuevoEmpleado.Nombre);
+    command.Parameters.AddWithValue("@apellido", nuevoEmpleado.Apellido);
+    // ...
+}
+                                </code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <details>
+                        <summary>Ver Código Completo y Documentado del Formulario (`Form1.cs`)</summary>
+                        <div class="details-content">
+                            <p>A continuación se presenta el código íntegro del formulario `Form1.cs` después de la refactorización. Cada método está documentado para explicar su propósito en la nueva arquitectura orientada a objetos.</p>
+                             <div class="code-block">
+                                <button class="copy-button" onclick="copyCode(this)">Copiar</button>
+                                <pre><code class="language-csharp">
+// CÓDIGO COMPLETO DE Form1.cs - VERSIÓN REFACTORIZADA
+// ===================================================
+
+// Añadir en la parte superior de Form1.cs
+using MySql.Data.MySqlClient;
+using System;
+using System.Data;
+using System.Windows.Forms;
+
+public partial class Form1 : Form
+{
+    // Variables de clase que serán usadas por múltiples métodos.
+    private string connectionString = "Server=127.0.0.1;Database=recursos_humanos;Uid=root;Pwd=;";
+    private int idEmpleadoSeleccionado = 0;
+
+    // Constructor del formulario.
+    public Form1()
+    {
+        InitializeComponent();
+    }
+
+    // Evento que se dispara una sola vez, cuando el formulario se carga.
+    // Es el lugar ideal para la configuración inicial.
+    private void Form1_Load(object sender, EventArgs e)
+    {
+        CargarDatos();
+    }
+
+    // Método reutilizable para leer TODOS los empleados de la BD y mostrarlos en la grilla.
+    private void CargarDatos()
+    {
+        try
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "SELECT id_empleado, nombre, apellido, cargo, fecha_contratacion FROM empleados";
+                MySqlDataAdapter dataAdapter = new MySqlDataAdapter(query, connection);
+                DataTable dtEmpleados = new DataTable();
+                dataAdapter.Fill(dtEmpleados);
+                dgvEmpleados.DataSource = dtEmpleados;
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Error al cargar los datos: " + ex.Message);
+        }
+    }
+
+    // Evento que se dispara cuando el usuario hace clic en CUALQUIER celda de la grilla.
+    // Lo usamos para tomar los datos de la fila seleccionada y ponerlos en los controles de edición.
+    private void dgvEmpleados_CellClick(object sender, DataGridViewCellEventArgs e)
+    {
+        if (e.RowIndex >= 0)
+        {
+            DataGridViewRow filaSeleccionada = dgvEmpleados.Rows[e.RowIndex];
+            idEmpleadoSeleccionado = Convert.ToInt32(filaSeleccionada.Cells["id_empleado"].Value);
+            txtNombre.Text = filaSeleccionada.Cells["nombre"].Value.ToString();
+            txtApellido.Text = filaSeleccionada.Cells["apellido"].Value.ToString();
+            txtCargo.Text = filaSeleccionada.Cells["cargo"].Value.ToString();
+            dtpFechaContratacion.Value = Convert.ToDateTime(filaSeleccionada.Cells["fecha_contratacion"].Value);
+        }
+    }
+
+    // Prepara el formulario para ingresar un nuevo registro.
+    private void btnNuevo_Click(object sender, EventArgs e)
+    {
+        txtNombre.Clear();
+        txtApellido.Clear();
+        txtCargo.Clear();
+        dtpFechaContratacion.Value = DateTime.Now;
+        idEmpleadoSeleccionado = 0; // Importante: 0 indica que es un registro NUEVO.
+        txtNombre.Focus();
+    }
+
+    // --- MÉTODO REFACTORIZADO ---
+    // Orquesta la creación, validación y guardado de un NUEVO empleado.
+    private void btnGuardar_Click(object sender, EventArgs e)
+    {
+        Empleado nuevoEmpleado = new Empleado
+        {
+            Nombre = txtNombre.Text,
+            Apellido = txtApellido.Text,
+            Cargo = txtCargo.Text,
+            FechaContratacion = dtpFechaContratacion.Value
+        };
+
+        if (!nuevoEmpleado.EsValido())
+        {
+            MessageBox.Show("Por favor, complete los campos obligatorios (Nombre, Apellido, Cargo).", "Datos Incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+        
+        try
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "INSERT INTO empleados (nombre, apellido, cargo, fecha_contratacion) VALUES (@nombre, @apellido, @cargo, @fecha)";
+                MySqlCommand command = new MySqlCommand(query, connection);
+                
+                command.Parameters.AddWithValue("@nombre", nuevoEmpleado.Nombre);
+                command.Parameters.AddWithValue("@apellido", nuevoEmpleado.Apellido);
+                command.Parameters.AddWithValue("@cargo", nuevoEmpleado.Cargo);
+                command.Parameters.AddWithValue("@fecha", nuevoEmpleado.FechaContratacion);
+
+                connection.Open();
+                command.ExecuteNonQuery();
+                
+                MessageBox.Show("Empleado guardado exitosamente.");
+                CargarDatos();
+                btnNuevo_Click(null, null);
+            }
+        }
+        catch (Exception ex) { MessageBox.Show("Error al guardar el empleado: " + ex.Message); }
+    }
+
+    // --- MÉTODO REFACTORIZADO ---
+    // Orquesta la creación, validación y actualización de un empleado EXISTENTE.
+    private void btnActualizar_Click(object sender, EventArgs e)
+    {
+        if (idEmpleadoSeleccionado == 0)
+        {
+            MessageBox.Show("Por favor, seleccione un empleado de la lista para actualizar.");
+            return;
+        }
+
+        Empleado empleadoAActualizar = new Empleado
+        {
+            Id = idEmpleadoSeleccionado,
+            Nombre = txtNombre.Text,
+            Apellido = txtApellido.Text,
+            Cargo = txtCargo.Text,
+            FechaContratacion = dtpFechaContratacion.Value
+        };
+
+        if (!empleadoAActualizar.EsValido())
+        {
+            MessageBox.Show("Por favor, complete los campos obligatorios (Nombre, Apellido, Cargo).", "Datos Incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+        
+        try
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                string query = "UPDATE empleados SET nombre = @nombre, apellido = @apellido, cargo = @cargo, fecha_contratacion = @fecha WHERE id_empleado = @id";
+                MySqlCommand command = new MySqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@nombre", empleadoAActualizar.Nombre);
+                command.Parameters.AddWithValue("@apellido", empleadoAActualizar.Apellido);
+                command.Parameters.AddWithValue("@cargo", empleadoAActualizar.Cargo);
+                command.Parameters.AddWithValue("@fecha", empleadoAActualizar.FechaContratacion);
+                command.Parameters.AddWithValue("@id", empleadoAActualizar.Id);
+
+                connection.Open();
+                command.ExecuteNonQuery();
+                
+                MessageBox.Show("Empleado actualizado exitosamente.");
+                CargarDatos();
+                btnNuevo_Click(null, null);
+            }
+        }
+        catch (Exception ex) { MessageBox.Show("Error al actualizar el empleado: " + ex.Message); }
+    }
+
+    // Elimina el registro seleccionado, previa confirmación.
+    private void btnEliminar_Click(object sender, EventArgs e)
+    {
+        if (idEmpleadoSeleccionado == 0)
+        {
+            MessageBox.Show("Por favor, seleccione un empleado de la lista para eliminar.");
+            return;
+        }
+
+        if (MessageBox.Show("¿Está seguro de que desea eliminar a este empleado?", "Confirmar Eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+        {
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    string query = "DELETE FROM empleados WHERE id_empleado = @id";
+                    MySqlCommand command = new MySqlCommand(query, connection);
+                    command.Parameters.AddWithValue("@id", idEmpleadoSeleccionado);
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                    
+                    MessageBox.Show("Empleado eliminado exitosamente.");
+                    CargarDatos();
+                    btnNuevo_Click(null, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al eliminar el empleado: " + ex.Message);
+            }
+        }
+    }
+}
+                                </code></pre>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+            </section>
+
+             <section class="phase-card">
+                 <div class="phase-header">
+                    <span class="phase-number">3</span>
+                    <h2>Conclusión y Siguientes Pasos</h2>
+                </div>
+                <div class="phase-content">
+                    <div class="warm-text">
+                        <p><strong>¡Misión Cumplida, Arquitecto de Objetos!</strong> Tu aplicación funciona igual que antes, pero su estructura interna es infinitamente superior. Has dado el paso más importante hacia la programación profesional al separar la lógica de negocio de la interfaz de usuario. Tu código ahora es más limpio, más seguro y mucho más fácil de mantener y escalar en el futuro.</p>
+                    </div>
+                     <div class="navigation-footer">
+                        <a href="#" class="nav-button" onclick="alert('¡Próximamente: Módulo de la Semana 11 - Arquitectura Limpia con Clases de Acceso a Datos!')">Avanzar a la Semana 11: Arquitectura</a>
+                    </div>
+                </div>
+             </section>
+        </main>
+    </div>
+
+    <script>
+        function checkPassword() {
+            // La nueva contraseña está codificada.
+            const passCorrectaCodificada = "UE9PbWFlc3RybzIwMjU="; // '???' en Base64
+            const passIngresada = document.getElementById('password-input').value;
+
+            // Comparamos las versiones codificadas para validar.
+            if (btoa(passIngresada) === passCorrectaCodificada) {
+                const overlay = document.getElementById('password-overlay');
+                overlay.style.opacity = '0';
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                    document.getElementById('contenido-protegido').style.display = 'block';
+                }, 500);
+            } else {
+                alert("Contraseña incorrecta. Acceso denegado.");
+            }
+        }
+        
+        document.getElementById('password-submit').addEventListener('click', checkPassword);
+        document.getElementById('password-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+
+        function copyCode(button) {
+            const pre = button.parentElement.querySelector('pre');
+            const code = pre.querySelector('code');
+            const textArea = document.createElement('textarea');
+            textArea.value = code.textContent;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            button.textContent = '¡Copiado!';
+            setTimeout(() => {
+                button.textContent = 'Copiar';
+            }, 2000);
+        }
+    </script>
+
+</body>
+</html>
