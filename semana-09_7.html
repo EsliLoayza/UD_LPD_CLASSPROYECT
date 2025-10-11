@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LPD Semana 09: De Arquitecto a Constructor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css">
+    <style>
+        :root {
+            --bg-color: #1a1a2e;
+            --primary-color: #162447;
+            --secondary-color: #1f4068;
+            --accent-color: #e43f5a;
+            --text-color: #e0e0e0;
+            --header-font: 'Orbitron', sans-serif;
+            --body-font: 'Roboto', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--body-font);
+            margin: 0;
+            padding: 0;
+            line-height: 1.7;
+        }
+        
+        #password-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            flex-direction: column;
+        }
+
+        #password-box {
+            background: var(--primary-color);
+            padding: 2.5rem;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid var(--accent-color);
+        }
+        #password-box h2 {
+            font-family: var(--header-font);
+            color: var(--accent-color);
+            margin-top: 0;
+        }
+        #password-input {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid var(--secondary-color);
+            background: #2a2a3e;
+            color: white;
+            font-size: 1rem;
+        }
+        #password-submit {
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            background: var(--accent-color);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        #contenido-protegido {
+            display: none;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .header { text-align: center; padding: 2rem 0; border-bottom: 2px solid var(--accent-color); margin-bottom: 2rem; }
+        .header h1 { font-family: var(--header-font); font-size: 2.8rem; color: var(--accent-color); text-shadow: 0 0 10px var(--accent-color); margin: 0; }
+        .header p { font-size: 1.2rem; color: #b0b0b0; }
+
+        .phase-card { background-color: var(--primary-color); border: 1px solid var(--secondary-color); border-radius: 10px; margin-bottom: 2.5rem; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .phase-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(228, 63, 90, 0.2); }
+        .phase-header { background: linear-gradient(90deg, var(--secondary-color) 0%, var(--primary-color) 100%); padding: 1rem 1.5rem; display: flex; align-items: center; }
+        .phase-header h2 { margin: 0; font-family: var(--header-font); font-size: 1.8rem; color: var(--text-color); }
+        .phase-number { font-family: var(--header-font); font-size: 2.2rem; color: var(--accent-color); margin-right: 1.5rem; text-shadow: 0 0 5px var(--accent-color); }
+        .phase-content { padding: 1.5rem 2rem; }
+
+        h3 { color: var(--accent-color); font-family: var(--header-font); border-left: 4px solid var(--accent-color); padding-left: 10px; }
+        .code-block { position: relative; }
+        .copy-button { position: absolute; top: 12px; right: 12px; background-color: #333; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; transition: background-color 0.2s; opacity: 0.7; }
+        .copy-button:hover { background-color: var(--accent-color); color: var(--bg-color); opacity: 1; }
+        pre[class*="language-"] { border-radius: 8px; border: 1px solid #444; }
+        
+        .uml-container { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 2rem; margin-top: 1.5rem; }
+        .uml-diagram { background-color: var(--secondary-color); padding: 1.5rem; border-radius: 8px; width: 45%; min-width: 300px; text-align: center; border: 1px solid #444; }
+        .uml-diagram h4 { font-family: var(--header-font); margin-top: 0; color: var(--accent-color); }
+
+        details { background: var(--secondary-color); border-radius: 8px; margin-bottom: 1rem; border: 1px solid #333; }
+        summary { padding: 1rem; cursor: pointer; font-weight: bold; font-size: 1.2rem; outline: none; }
+        summary:hover { background-color: #2a5a8a; }
+        .details-content { padding: 0 1.5rem 1.5rem 1.5rem; border-top: 1px solid #444; }
+
+        .warm-text {
+            background-color: rgba(228, 63, 90, 0.1);
+            border-left: 4px solid var(--accent-color);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .warm-text p { margin: 0; }
+
+        .navigation-footer {
+            text-align: center;
+            margin-top: 3rem;
+        }
+        .nav-button {
+            font-family: var(--header-font);
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            background-color: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .nav-button:hover {
+            background-color: white;
+            color: var(--accent-color);
+            box-shadow: 0 0 20px var(--accent-color);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="password-overlay">
+        <div id="password-box">
+            <h2>Acceso al Módulo LPD-S09</h2>
+            <p>Por favor, ingrese la contraseña de docente.</p>
+            <input type="password" id="password-input" placeholder="Contraseña...">
+            <button id="password-submit">Acceder</button>
+        </div>
+    </div>
+
+    <div id="contenido-protegido">
+        <header class="header">
+            <h1>Módulo Interactivo LPD - Semana 09</h1>
+            <p>De Arquitecto a Constructor: Implementando Sistemas desde Planos UML</p>
+        </header>
+
+        <main>
+            <!-- Fase 1: La Cimentación -->
+            <section class="phase-card">
+                 <div class="phase-header">
+                    <span class="phase-number">1</span>
+                    <h2>La Cimentación (Creando la Base de Datos)</h2>
+                </div>
+                <div class="phase-content">
+                    <h3>Del Diagrama de Clases al Script SQL</h3>
+                    <div class="warm-text">
+                        <p><strong>Explicación Pedagógica:</strong> Este es el primer acto de traducción. Cada `Clase` del diagrama se convierte en una `Tabla`, cada `Atributo` en una `Columna` y las `Relaciones` se materializan como `Claves Foráneas`. Observa cómo la tabla `tareas`, al estar en el lado "muchos" de ambas relaciones, es la que recibe las claves foráneas `id_proyecto` y `id_usuario_asignado`.</p>
+                    </div>
+                    <div class="code-block">
+                        <button class="copy-button" onclick="copyCode(this)">Copiar</button>
+                        <pre><code class="language-sql">
+CREATE DATABASE IF NOT EXISTS `gestion_tareas`;
+USE `gestion_tareas`;
+
+-- Tabla de Usuarios (traducción de la clase Usuario)
+CREATE TABLE `usuarios` (
+  `id_usuario` INT PRIMARY KEY AUTO_INCREMENT,
+  `nombre_usuario` VARCHAR(100) NOT NULL
+);
+
+-- Tabla de Proyectos (traducción de la clase Proyecto)
+CREATE TABLE `proyectos` (
+  `id_proyecto` INT PRIMARY KEY AUTO_INCREMENT,
+  `nombre_proyecto` VARCHAR(150) NOT NULL
+);
+
+-- Tabla de Tareas (traducción de la clase Tarea y sus relaciones)
+CREATE TABLE `tareas` (
+  `id_tarea` INT PRIMARY KEY AUTO_INCREMENT,
+  `titulo` VARCHAR(255) NOT NULL,
+  `fecha_vencimiento` DATE,
+  `estado` VARCHAR(50),
+  `id_proyecto` INT,
+  `id_usuario_asignado` INT,
+  FOREIGN KEY (`id_proyecto`) REFERENCES `proyectos`(`id_proyecto`),
+  FOREIGN KEY (`id_usuario_asignado`) REFERENCES `usuarios`(`id_usuario`)
+);
+
+-- Insertar datos de prueba para trabajar
+INSERT INTO `usuarios` (nombre_usuario) VALUES ('Juan Pérez'), ('Ana García'), ('Luis Martínez');
+INSERT INTO `proyectos` (nombre_proyecto) VALUES ('Desarrollo App Móvil'), ('Migración de Servidor');
+INSERT INTO `tareas` (titulo, fecha_vencimiento, estado, id_proyecto, id_usuario_asignado) VALUES
+('Diseñar Login', '2025-11-10', 'Pendiente', 1, 2),
+('Configurar Base de Datos', '2025-11-15', 'En Progreso', 1, 1),
+('Backup Servidor Actual', '2025-10-20', 'Completada', 2, 3);
+                        </code></pre>
+                    </div>
+                </div>
+            </section>
+
+             <!-- Fase 2: El Edificio -->
+            <section class="phase-card">
+                 <div class="phase-header">
+                    <span class="phase-number">2</span>
+                    <h2>El Edificio (Diseño y Lógica CRUD)</h2>
+                </div>
+                <div class="phase-content">
+                    <h3>Código C# Completo y Documentado</h3>
+                    <div class="warm-text">
+                        <p><strong>Enfoque Pedagógico:</strong> El código está organizado de forma profesional. Primero, declaramos las variables que toda la clase necesita. Luego, creamos métodos reutilizables para las tareas repetitivas (como cargar datos). Finalmente, implementamos la lógica específica de cada evento (clic de botón, etc.). Esta estructura hace que el código sea más fácil de leer, entender y mantener.</p>
+                    </div>
+                    
+                    <details>
+                        <summary>Paso 1: Variables de Clase y `Form_Load`</summary>
+                        <div class="details-content">
+                            <p>Declaramos la cadena de conexión y el ID seleccionado a nivel de clase para que sean accesibles por todos los métodos. En el evento `Load` del formulario, orquestamos la carga inicial de todos los datos necesarios.</p>
+                             <div class="code-block">
+                                <button class="copy-button" onclick="copyCode(this)">Copiar</button>
+                                <pre><code class="language-csharp">
+// Añadir en la parte superior de Form1.cs
+using MySql.Data.MySqlClient;
+using System.Data;
+
+public partial class FormTareas : Form
+{
+    private string connectionString = "Server=127.0.0.1;Database=gestion_tareas;Uid=root;Pwd=;";
+    private int idTareaSeleccionada = 0;
+
+    public FormTareas()
+    {
+        InitializeComponent();
+    }
+
+    private void FormTareas_Load(object sender, EventArgs e)
+    {
+        CargarTareas();
+        CargarProyectosEnComboBox();
+        CargarUsuariosEnComboBox();
+        cboEstado.Items.AddRange(new string[] { "Pendiente", "En Progreso", "Completada" });
+        cboEstado.SelectedIndex = 0; // Seleccionar el primer item por defecto
+    }
+}
+                                </code></pre>
+                            </div>
+                        </div>
+                    </details>
+                    
+                    <details>
+                        <summary>Paso 2: Métodos de Carga de Datos (Reutilizables)</summary>
+                        <div class="details-content">
+                            <p>Creamos métodos específicos para cada tarea de carga. `CargarTareas` usa un `INNER JOIN` para mostrar información legible. Los otros dos métodos llenan los `ComboBox`, configurando `DisplayMember` (lo que ve el usuario) y `ValueMember` (el ID que usamos internamente).</p>
+                            <div class="code-block">
+                                <button class="copy-button" onclick="copyCode(this)">Copiar</button>
+                                <pre><code class="language-csharp">
+private void CargarTareas()
+{
+    try {
+        string query = @"
+            SELECT t.id_tarea, t.titulo AS 'Título', t.fecha_vencimiento AS 'Vencimiento', t.estado AS 'Estado',
+                   p.nombre_proyecto AS 'Proyecto', u.nombre_usuario AS 'Asignado a',
+                   t.id_proyecto, t.id_usuario_asignado
+            FROM tareas AS t
+            INNER JOIN proyectos AS p ON t.id_proyecto = p.id_proyecto
+            INNER JOIN usuarios AS u ON t.id_usuario_asignado = u.id_usuario";
+        
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
+        {
+            MySqlDataAdapter adapter = new MySqlDataAdapter(query, connection);
+            DataTable dt = new DataTable();
+            adapter.Fill(dt);
+            dgvTareas.DataSource = dt;
+            dgvTareas.Columns["id_tarea"].Visible = false;
+            dgvTareas.Columns["id_proyecto"].Visible = false;
+            dgvTareas.Columns["id_usuario_asignado"].Visible = false;
+        }
+    } catch (Exception ex) {
+        MessageBox.Show("Error al cargar tareas: " + ex.Message);
+    }
+}
+
+private void CargarProyectosEnComboBox()
+{
+    try {
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
+        {
+            string query = "SELECT id_proyecto, nombre_proyecto FROM proyectos";
+            MySqlDataAdapter adapter = new MySqlDataAdapter(query, connection);
+            DataTable dt = new DataTable();
+            adapter.Fill(dt);
+
+            cboProyecto.DataSource = dt;
+            cboProyecto.DisplayMember = "nombre_proyecto";
+            cboProyecto.ValueMember = "id_proyecto";
+        }
+    } catch (Exception ex) {
+        MessageBox.Show("Error al cargar proyectos: " + ex.Message);
+    }
+}
+
+private void CargarUsuariosEnComboBox()
+{
+    try {
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
+        {
+            string query = "SELECT id_usuario, nombre_usuario FROM usuarios";
+            MySqlDataAdapter adapter = new MySqlDataAdapter(query, connection);
+            DataTable dt = new DataTable();
+            adapter.Fill(dt);
+
+            cboUsuario.DataSource = dt;
+            cboUsuario.DisplayMember = "nombre_usuario";
+            cboUsuario.ValueMember = "id_usuario";
+        }
+    } catch (Exception ex) {
+        MessageBox.Show("Error al cargar usuarios: " + ex.Message);
+    }
+}
+                                </code></pre>
+                            </div>
+                        </div>
+                    </details>
+                    
+                    <details>
+                        <summary>Paso 3: Lógica de Interacción (Eventos de Controles)</summary>
+                        <div class="details-content">
+                            <p>El evento `CellClick` de la grilla llena los controles de edición. Los botones del CRUD (Nuevo, Guardar, Actualizar, Eliminar) contienen la lógica para modificar la base de datos de forma segura, usando siempre consultas parametrizadas.</p>
+                             <div class="code-block">
+                                <button class="copy-button" onclick="copyCode(this)">Copiar</button>
+                                <pre><code class="language-csharp">
+private void dgvTareas_CellClick(object sender, DataGridViewCellEventArgs e)
+{
+    if (e.RowIndex >= 0)
+    {
+        DataGridViewRow row = dgvTareas.Rows[e.RowIndex];
+        idTareaSeleccionada = Convert.ToInt32(row.Cells["id_tarea"].Value);
+
+        txtTitulo.Text = row.Cells["Título"].Value.ToString();
+        dtpFechaVencimiento.Value = Convert.ToDateTime(row.Cells["Vencimiento"].Value);
+        cboEstado.SelectedItem = row.Cells["Estado"].Value.ToString();
+        cboProyecto.SelectedValue = row.Cells["id_proyecto"].Value;
+        cboUsuario.SelectedValue = row.Cells["id_usuario_asignado"].Value;
+    }
+}
+
+private void btnNuevo_Click(object sender, EventArgs e)
+{
+    txtTitulo.Clear();
+    dtpFechaVencimiento.Value = DateTime.Now;
+    cboEstado.SelectedIndex = 0;
+    cboProyecto.SelectedIndex = 0;
+    cboUsuario.SelectedIndex = 0;
+    idTareaSeleccionada = 0;
+    txtTitulo.Focus();
+}
+
+private void btnGuardar_Click(object sender, EventArgs e)
+{
+    // ... Código INSERT parametrizado ...
+    // (Ver implementación completa en el ejemplo anterior)
+    string query = "INSERT INTO tareas (titulo, fecha_vencimiento, estado, id_proyecto, id_usuario_asignado) VALUES (@titulo, @fecha, @estado, @id_proyecto, @id_usuario)";
+    try {
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
+        {
+            MySqlCommand command = new MySqlCommand(query, connection);
+            command.Parameters.AddWithValue("@titulo", txtTitulo.Text);
+            command.Parameters.AddWithValue("@fecha", dtpFechaVencimiento.Value);
+            command.Parameters.AddWithValue("@estado", cboEstado.SelectedItem.ToString());
+            command.Parameters.AddWithValue("@id_proyecto", cboProyecto.SelectedValue);
+            command.Parameters.AddWithValue("@id_usuario", cboUsuario.SelectedValue);
+            connection.Open();
+            command.ExecuteNonQuery();
+            MessageBox.Show("Tarea guardada.");
+        }
+        CargarTareas();
+    } catch(Exception ex) { MessageBox.Show("Error al guardar: " + ex.Message); }
+}
+
+private void btnActualizar_Click(object sender, EventArgs e)
+{
+    if (idTareaSeleccionada == 0) { MessageBox.Show("Seleccione una tarea para actualizar."); return; }
+    // ... Código UPDATE parametrizado con WHERE id_tarea = @id ...
+    string query = "UPDATE tareas SET titulo=@titulo, fecha_vencimiento=@fecha, estado=@estado, id_proyecto=@id_proyecto, id_usuario_asignado=@id_usuario WHERE id_tarea=@id";
+     try {
+        using (MySqlConnection connection = new MySqlConnection(connectionString))
+        {
+            MySqlCommand command = new MySqlCommand(query, connection);
+            command.Parameters.AddWithValue("@titulo", txtTitulo.Text);
+            command.Parameters.AddWithValue("@fecha", dtpFechaVencimiento.Value);
+            command.Parameters.AddWithValue("@estado", cboEstado.SelectedItem.ToString());
+            command.Parameters.AddWithValue("@id_proyecto", cboProyecto.SelectedValue);
+            command.Parameters.AddWithValue("@id_usuario", cboUsuario.SelectedValue);
+            command.Parameters.AddWithValue("@id", idTareaSeleccionada);
+            connection.Open();
+            command.ExecuteNonQuery();
+            MessageBox.Show("Tarea actualizada.");
+        }
+        CargarTareas();
+    } catch(Exception ex) { MessageBox.Show("Error al actualizar: " + ex.Message); }
+}
+
+private void btnEliminar_Click(object sender, EventArgs e)
+{
+    if (idTareaSeleccionada == 0) { MessageBox.Show("Seleccione una tarea para eliminar."); return; }
+    if (MessageBox.Show("¿Seguro que desea eliminar esta tarea?", "Confirmar", MessageBoxButtons.YesNo) == DialogResult.Yes)
+    {
+        // ... Código DELETE parametrizado con WHERE id_tarea = @id ...
+        string query = "DELETE FROM tareas WHERE id_tarea=@id";
+        try {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                MySqlCommand command = new MySqlCommand(query, connection);
+                command.Parameters.AddWithValue("@id", idTareaSeleccionada);
+                connection.Open();
+                command.ExecuteNonQuery();
+                MessageBox.Show("Tarea eliminada.");
+            }
+            CargarTareas();
+        } catch(Exception ex) { MessageBox.Show("Error al eliminar: " + ex.Message); }
+    }
+}
+                                </code></pre>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+            </section>
+
+             <section class="phase-card">
+                 <div class="phase-header">
+                    <span class="phase-number">3</span>
+                    <h2>Conclusión y Siguientes Pasos</h2>
+                </div>
+                <div class="phase-content">
+                    <div class="warm-text">
+                        <p><strong>¡Misión Cumplida, Ingeniero!</strong> Has completado el ciclo profesional: recibiste un diseño formal (UML), lo interpretaste para construir la estructura de datos (SQL), y luego construiste la aplicación funcional (C# WinForms) que se adhiere a ese diseño. Esta es la habilidad fundamental que te distingue como un verdadero ingeniero de software.</p>
+                    </div>
+ <div class="navigation-footer">
+                        <a href="semana-09.html" class="nav-button" onclick="alert('Volver a la sesion 9')">Volver a la semana 9</a>
+                    </div>
+                     <div class="navigation-footer">
+                        <a href="semana-10.html" class="nav-button" onclick="alert('¡Próximamente: Módulo de la Semana 10 - Programación Orientada a Objetos!')">Avanzar a la Semana 10: POO</a>
+                    </div>
+                </div>
+             </section>
+        </main>
+    </div>
+
+    <script>
+        function checkPassword() {
+            const passwordCorrecta = "UMLmaestro2025";
+            const passwordIngresada = document.getElementById('password-input').value;
+
+            if (passwordIngresada === passwordCorrecta) {
+                document.getElementById('password-overlay').style.display = 'none';
+                document.getElementById('contenido-protegido').style.display = 'block';
+            } else {
+                alert("Contraseña incorrecta. El acceso ha sido denegado.");
+            }
+        }
+        
+        document.getElementById('password-submit').addEventListener('click', checkPassword);
+        document.getElementById('password-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+
+        function copyCode(button) {
+            const pre = button.parentElement.querySelector('pre');
+            const code = pre.querySelector('code');
+            const textArea = document.createElement('textarea');
+            textArea.value = code.textContent;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            button.textContent = '¡Copiado!';
+            setTimeout(() => {
+                button.textContent = 'Copiar';
+            }, 2000);
+        }
+    </script>
+
+</body>
+</html>
