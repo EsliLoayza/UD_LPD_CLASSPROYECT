@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyectos Finales - Programación Distribuida</title>
+    
+    <!-- Inclusión de Tailwind CSS (con cache-buster) -->
+    <script src="https://cdn.tailwindcss.com?v=20250103"></script>
+    
+    <!-- Inclusión de Google Fonts (Lato) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!--
+      VERSIÓN CORREGIDA Y ROBUSTA:
+      Configuración de Tailwind (JavaScript)
+      Se definen los colores directamente como el script del CDN espera.
+      Este es el método correcto para este entorno.
+    -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'header': ['Lato', 'sans-serif'],
+                        'body': ['Lato', 'sans-serif'],
+                    },
+                    colors: {
+                        /* Paleta de colores solicitada (¡forma correcta!) */
+                        'base': {
+                            '900': '#504734',     /* Títulos H2 (Marrón oscuro) */
+                            '700': '#646C7A',     /* Texto principal (Gris/Azul oscuro) */
+                        },
+                        'primary': {
+                            '700': '#77A5FA',     /* Azul brillante */
+                        },
+                        'secondary': {
+                            '600': '#8899BA',     /* Azul/Gris pálido */
+                        },
+                        'accent': {
+                            '500': '#FCD57E',     /* Dorado */
+                        },
+                        'neutral': {
+                            '500': '#A59B86'      /* Beige/Topo */
+                        },
+                        /* Fondos */
+                        'page': '#F8F9FA',      /* Fondo de página (Gris muy claro) */
+                        'card': '#FFFFFF'       /* Fondo de tarjeta (Blanco) */
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Estilos mínimos para animaciones y selección (no rompen Tailwind) -->
+    <style>
+        /* -- Estilo de selección de texto personalizado -- */
+        ::selection {
+            background-color: #FCD57E; /* Dorado */
+            color: #504734;          /* Marrón oscuro */
+        }
+
+        /* -- Animación de entrada para las tarjetas -- */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .project-card-animate {
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
+        }
+    </style>
+</head>
+<!-- Aplicación de las clases base de la nueva paleta -->
+<body class="bg-page font-body text-base-700 antialiased">
+
+    <div class="container max-w-5xl mx-auto p-6 md:p-10">
+
+        <!-- Encabezado Principal -->
+        <header class="mb-10">
+            <!-- Título principal en Dorado (accent-500) -->
+            <h1 class="font-header text-4xl md:text-5xl font-bold text-accent-500 mb-3">
+                Semana 15: Proyectos Individuales
+            </h1>
+            <p class="font-header text-xl text-base-700">
+                Unidad: Lenguaje de Programación Distribuida (C# y MySQL)
+            </p>
+            <p class="mt-4 text-lg leading-relaxed text-base-700/90">
+                A continuación, se presentan 15 proyectos individuales diseñados para evaluar de forma integral las competencias adquiridas. Cada estudiante debe desarrollar el sistema completo asignado, desde el análisis de requisitos hasta la generación del ejecutable, aplicando la arquitectura de 3 capas y las buenas prácticas vistas en clase.
+            </p>
+        </header>
+
+        <!-- Contenedor de Proyectos -->
+        <main class="space-y-12">
+
+            <!-- Proyecto 1 -->
+            <article class="bg-card rounded-lg shadow-lg overflow-hidden border border-gray-200/80 project-card-animate transition-all duration-300 hover:shadow-2xl hover:-translate-y-1" style="animation-delay: 0.05s;">
+                <div class="p-6 md:p-8">
+                    <!-- Insignia en Azul brillante (primary-700) -->
+                    <span class="inline-block bg-primary-700 text-white text-sm font-semibold px-3 py-1 rounded-full mb-3">Proyecto 01</span>
+                    <!-- Título H2 con Marrón oscuro (base-900) -->
+                    <h2 class="font-header text-3xl font-bold text-base-900 mb-4">
+                        Sistema de Gestión de Viveros y Trazabilidad Botánica (BotanTrak)
+                    </h2>
+                    
+                    <!-- Subtítulos en Azul/Gris pálido (secondary-600) -->
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Contexto del Cliente</h3>
+                    <p class="mb-4 leading-relaxed">
+                        Un consorcio de viveros especializado en plantas nativas y en peligro de extinción necesita un sistema de escritorio para gestionar su inventario. El problema principal es la trazabilidad: necesitan saber el origen exacto de cada semilla (lote, colector, fecha, geolocalización de recolección), su proceso de germinación, trasplantes, y su ubicación final (venta o reforestación).
+                    </p>
+
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Requerimientos Clave</h3>
+                    <ul class="list-disc list-inside space-y-2 mb-4 pl-4 text-base-700/90">
+                        <li>Módulo de "Lotes de Semillas" con trazabilidad de origen (colector, coordenadas GPS, fecha).</li>
+                        <li>Módulo de "Germinación" para registrar tasas de éxito, fechas y condiciones (sustrato, invernadero).</li>
+                        <li>Módulo de "Inventario de Plantas" que vincule cada planta a su lote de semilla original.</li>
+                        <li>Gestión de "Invernaderos" y "Secciones" para ubicación física de las plantas.</li>
+                        <li>Módulo de "Salidas" (Venta, Donación, Reforestación) que cierre el ciclo de trazabilidad.</li>
+                        <li>Reportes de inventario por especie, tasa de germinación por lote y mapa de origen de semillas (simulado).</li>
+                    </ul>
+
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Entregables Técnicos ObligatorIOS</h3>
+                    <ul class="list-disc list-inside space-y-2 pl-4 text-base-700/90">
+                        <li><b>Diseño:</b> Diagrama de Clases completo y Diagrama de Componentes.</li>
+                        <li><b>Arquitectura:</b> Implementación estricta de 3 capas (Presentación: WinForms, Lógica: C#, Datos: C# con MySQL).</li>
+                        <li><b>DLLs:</b> Generación de las bibliotecas de vínculos dinámicos (.dll) para la capa de Lógica y la capa de Acceso a Datos.</li>
+                        <li><b>Base de Datos:</b> Script SQL de creación de la base de datos MySQL (tablas, relaciones, vistas si es necesario).</li>
+                        <li><b>Ejecutable:</b> Entrega del archivo .exe funcional y el código fuente completo.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <!-- Proyecto 2 -->
+            <article class="bg-card rounded-lg shadow-lg overflow-hidden border border-gray-200/80 project-card-animate transition-all duration-300 hover:shadow-2xl hover:-translate-y-1" style="animation-delay: 0.1s;">
+                <div class="p-6 md:p-8">
+                    <span class="inline-block bg-primary-700 text-white text-sm font-semibold px-3 py-1 rounded-full mb-3">Proyecto 02</span>
+                    <h2 class="font-header text-3xl font-bold text-base-900 mb-4">
+                        Sistema de Gestión de No Conformidades y Acciones Correctivas (Q-CapaSys)
+                    </h2>
+                    
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Contexto del Cliente</h3>
+                    <p class="mb-4 leading-relaxed">
+                        Una empresa de manufactura mediana (ej. textiles técnicos) necesita formalizar su proceso de Calidad (QA/QC). Actualmente, los "reportes de no conformidad" (producto defectuoso, error de proceso) se manejan por email y Excel, perdiendo el seguimiento. Se requiere un sistema de escritorio para gestionar el ciclo de vida completo de una No Conformidad (NC) y su Acción Correctiva/Preventiva (CAPA).
+                    </p>
+
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Requerimientos Clave</h3>
+                    <ul class="list-disc list-inside space-y-2 mb-4 pl-4 text-base-700/90">
+                        <li>Módulo de "Usuarios" con roles (Operario, Supervisor de Calidad, Gerente).</li>
+                        <li>Formulario de "Registro de NC" (fecha, área, descripción, tipo de defecto, lote afectado, evidencia - path a imagen).</li>
+                        <li>Gestión de "Workflow de Estado" de la NC (Abierta, En Análisis, Cerrada, Verificada).</li>
+                        <li>Módulo de "Análisis de Causa Raíz" (ej. 5 Porqués, Ishikawa - campos de texto).</li>
+                        <li>Módulo de "Acciones (CAPA)" vinculado a una NC, con responsable asignado y fecha límite.</li>
+                        <li>Dashboard (pantalla principal) que muestre NCs abiertas por área y acciones vencidas.</li>
+                    </ul>
+
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Entregables Técnicos ObligatorIOS</h3>
+                    <ul class="list-disc list-inside space-y-2 pl-4 text-base-700/90">
+                        <li><b>Diseño:</b> Diagrama de Clases completo y Diagrama de Componentes.</li>
+                        <li><b>Arquitectura:</b> Implementación estricta de 3 capas (Presentación: WinForms, Lógica: C#, Datos: C# con MySQL).</li>
+                        <li><b>DLLs:</b> Generación de las bibliotecas de vínculos dinámicos (.dll) para la capa de Lógica y la capa de Acceso a Datos.</li>
+                        <li><b>Base de Datos:</b> Script SQL de creación de la base de datos MySQL (tablas, relaciones, vistas si es necesario).</li>
+                        <li><b>Ejecutable:</b> Entrega del archivo .exe funcional y el código fuente completo.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <!-- Proyecto 3 -->
+            <article class="bg-card rounded-lg shadow-lg overflow-hidden border border-gray-200/80 project-card-animate transition-all duration-300 hover:shadow-2xl hover:-translate-y-1" style="animation-delay: 0.15s;">
+                <div class="p-6 md:p-8">
+                    <span class="inline-block bg-primary-700 text-white text-sm font-semibold px-3 py-1 rounded-full mb-3">Proyecto 03</span>
+                    <h2 class="font-header text-3xl font-bold text-base-900 mb-4">
+                        Gestor de Flotillas y Mantenimiento Predictivo (FleetPro)
+                    </h2>
+                    
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Contexto del Cliente</h3>
+                    <p class="mb-4 leading-relaxed">
+                        Una compañía de logística regional con una flotilla de 30 camiones de carga necesita un sistema para controlar el mantenimiento. Quieren dejar de hacer mantenimientos "correctivos" (cuando algo falla) y pasar a un modelo "predictivo" y "preventivo" basado en el kilometraje (Odómetro) real y el tipo de uso de la unidad.
+                    </p>
+
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Requerimientos Clave</h3>
+                    <ul class="list-disc list-inside space-y-2 mb-4 pl-4 text-base-700/90">
+                        <li>Módulo de "Unidades" (Camiones) con datos maestros (placa, modelo, año, odómetro inicial).</li>
+                        <li>Módulo de "Conductores" y asignación de viajes (quién usa qué camión y cuándo).</li>
+                        <li>Registro de "Bitácoras de Viaje" donde el conductor actualiza el odómetro final del día.</li>
+                        <li>Módulo de "Planes de Mantenimiento" (ej. "Cambio de Aceite cada 10,000 km", "Revisión de Frenos cada 30,000 km").</li>
+                        <li>El sistema debe calcular el "km restante" para cada servicio de cada unidad.</li>
+                        <li>Generación de "Alertas" (visuales) en un dashboard para unidades que estén a menos de 1,000 km de su próximo servicio.</li>
+                        <li>Registro de "Órdenes de Taller" (mantenimientos realizados, costo, repuestos).</li>
+                    </ul>
+
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Entregables Técnicos ObligatorIOS</h3>
+                    <ul class="list-disc list-inside space-y-2 pl-4 text-base-700/90">
+                        <li><b>Diseño:</b> Diagrama de Clases completo y Diagrama de Componentes.</li>
+                        <li><b>Arquitectura:</b> Implementación estricta de 3 capas (Presentación: WinForms, Lógica: C#, Datos: C# con MySQL).</li>
+                        <li><b>DLLs:</b> Generación de las bibliotecas de vínculos dinámicos (.dll) para la capa de Lógica y la capa de Acceso a Datos.</li>
+                        <li><b>Base de Datos:</b> Script SQL de creación de la base de datos MySQL (tablas, relaciones, vistas si es necesario).</li>
+                        <li><b>Ejecutable:</b> Entrega del archivo .exe funcional y el código fuente completo.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <!-- Proyecto 4 -->
+            <article class="bg-card rounded-lg shadow-lg overflow-hidden border border-gray-200/80 project-card-animate transition-all duration-300 hover:shadow-2xl hover:-translate-y-1" style="animation-delay: 0.2s;">
+                <div class="p-6 md:p-8">
+                    <span class="inline-block bg-primary-700 text-white text-sm font-semibold px-3 py-1 rounded-full mb-3">Proyecto 04</span>
+                    <h2 class="font-header text-3xl font-bold text-base-900 mb-4">
+                        Sistema de Gestión de Colecciones de Museos (MusaeumTech)
+                    </h2>
+                    
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Contexto del Cliente</h3>
+                    <p class="mb-4 leading-relaxed">
+                        Un museo de historia local o una galería de arte privada necesita un sistema de "Catalogación y Conservación". El objetivo es tener un inventario digital detallado de cada pieza (artefacto, pintura, documento), su ubicación (en exhibición, en almacén, en préstamo) y su historial de conservación (limpiezas, restauraciones).
+                    </p>
+
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Requerimientos Clave</h3>
+                    <ul class="list-disc list-inside space-y-2 mb-4 pl-4 text-base-700/90">
+                        <li>Módulo de "Ficha de Obra" (N° de Inventario, Título, Autor/Cultura, Año, Dimensiones, Descripción, Foto - path).</li>
+                        <li>Clasificación de Obras por "Colección" (ej. "Periodo Colonial", "Arte Moderno").</li>
+                        <li>Módulo de "Ubicación" (tracking de dónde está la pieza: Sala 1, Almacén B, Préstamo a Museo X).</li>
+                        <li>Módulo de "Conservación": Registro de "Reportes de Condición" (daños, humedad) y "Reportes de Tratamiento" (qué se le hizo, quién, fecha).</li>
+                        <li>Gestión de "Préstamos" (Institución, fecha salida, fecha retorno esperada).</li>
+                        <li>Buscador avanzado de obras por autor, cultura, tipo de objeto o palabra clave en la descripción.</li>
+                    </ul>
+
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Entregables Técnicos ObligatorIOS</h3>
+                    <ul class="list-disc list-inside space-y-2 pl-4 text-base-700/90">
+                        <li><b>Diseño:</b> Diagrama de Clases completo y Diagrama de Componentes.</li>
+                        <li><b>Arquitectura:</b> Implementación estricta de 3 capas (Presentación: WinForms, Lógica: C#, Datos: C# con MySQL).</li>
+                        <li><b>DLLs:</b> Generación de las bibliotecas de vínculos dinámicos (.dll) para la capa de Lógica y la capa de Acceso a Datos.</li>
+                        <li><b>Base de Datos:</b> Script SQL de creación de la base de datos MySQL (tablas, relaciones, vistas si es necesario).</li>
+                        <li><b>Ejecutable:</b> Entrega del archivo .exe funcional y el código fuente completo.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <!-- Proyecto 5 -->
+            <article class="bg-card rounded-lg shadow-lg overflow-hidden border border-gray-200/80 project-card-animate transition-all duration-300 hover:shadow-2xl hover:-translate-y-1" style="animation-delay: 0.25s;">
+                <div class="p-6 md:p-8">
+                    <span class="inline-block bg-primary-700 text-white text-sm font-semibold px-3 py-1 rounded-full mb-3">Proyecto 05</span>
+                    <h2 class="font-header text-3xl font-bold text-base-900 mb-4">
+                        Sistema de Gestión de Pacientes y Donantes para Banco de Sangre (HemoSys)
+                    </h2>
+                    
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Contexto del Cliente</h3>
+                    <p class="mb-4 leading-relaxed">
+                        Un banco de sangre regional necesita un sistema robusto para administrar dos flujos críticos: los donantes y el inventario de unidades de sangre. El sistema debe garantizar la trazabilidad de la donación desde la vena del donante hasta la transfusión al paciente, manejando fechas de caducidad y compatibilidad.
+                    </p>
+
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Requerimientos Clave</h3>
+                    <ul class="list-disc list-inside space-y-2 mb-4 pl-4 text-base-700/90">
+                        <li>Módulo de "Donantes": Registro (datos personales, tipo de sangre, historial de donaciones).</li>
+                        <li>Gestión de "Elegibilidad": Control de cuándo un donante puede volver a donar (ej. cada 3 meses).</li>
+                        <li>Módulo de "Donación": Registro de la extracción (generación de un ID único para la bolsa de sangre), vinculado al donante.</li>
+                        <li>Módulo de "Inventario de Unidades": Gestión de stock de bolsas (plasma, plaquetas, glóbulos rojos) por tipo de sangre y fecha de caducidad.</li>
+                        <li>El sistema debe alertar (visual) sobre unidades a punto de caducar (ej. próximos 5 días).</li>
+                        <li>Módulo de "Solicitudes" (Pacientes/Hospitales) y "Despacho" de unidades, verificando compatibilidad (ej. A+ puede recibir de A+, A-, O+, O-).</li>
+                        <li>Reportes de stock crítico y listado de donantes elegibles para llamar.</li>
+                    </ul>
+
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Entregables Técnicos ObligatorIOS</h3>
+                    <ul class="list-disc list-inside space-y-2 pl-4 text-base-700/90">
+                        <li><b>Diseño:</b> Diagrama de Clases completo y Diagrama de Componentes.</li>
+                        <li><b>Arquitectura:</b> Implementación estricta de 3 capas (Presentación: WinForms, Lógica: C#, Datos: C# con MySQL).</li>
+                        <li><b>DLLs:</b> Generación de las bibliotecas de vínculos dinámicos (.dll) para la capa de Lógica y la capa de Acceso a Datos.</li>
+                        <li><b>Base de Datos:</b> Script SQL de creación de la base de datos MySQL (tablas, relaciones, vistas si es necesario).</li>
+                        <li><b>Ejecutable:</b> Entrega del archivo .exe funcional y el código fuente completo.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <!-- Proyecto 6 -->
+            <article class="bg-card rounded-lg shadow-lg overflow-hidden border border-gray-200/80 project-card-animate transition-all duration-300 hover:shadow-2xl hover:-translate-y-1" style="animation-delay: 0.3s;">
+                <div class="p-6 md:p-8">
+                    <span class="inline-block bg-primary-700 text-white text-sm font-semibold px-3 py-1 rounded-full mb-3">Proyecto 06</span>
+                    <h2 class="font-header text-3xl font-bold text-base-900 mb-4">
+                        Sistema de Gestión de Pruebas de Laboratorio (LIMS) para Suelos y Aguas (AgroLab)
+                    </h2>
+                    
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Contexto del Cliente</h3>
+                    <p class="mb-4 leading-relaxed">
+                        Un laboratorio de análisis agrícola recibe diariamente muestras de suelo y agua de cientos de agricultores. Necesitan un sistema (LIMS - Laboratory Information Management System) para registrar las muestras, asignar las pruebas a realizar (pH, Nitrógeno, Fósforo, etc.), registrar los resultados y generar el informe final para el cliente, asegurando la trazabilidad de la muestra.
+                    </p>
+
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Requerimientos Clave</h3>
+                    <ul class="list-disc list-inside space-y-2 mb-4 pl-4 text-base-700/90">
+                        <li>Módulo de "Clientes" (Agricultores/Empresas).</li>
+                        <li>Módulo de "Recepción de Muestras" (generación de ID único, tipo de muestra, cliente, geolocalización de la toma).</li>
+                        <li>Módulo de "Catálogo de Pruebas" (ej. "N-Total", "pH-Agua") con métodos y valores de referencia (mín/máx).</li>
+                        <li>Asignación de "Paquetes de Pruebas" a las muestras recibidas (ej. "Análisis Foliar Completo").</li>
+                        <li>Módulo de "Registro de Resultados" por parte de los analistas de laboratorio.</li>
+                        <li>Generación de "Informes de Resultados" (en PDF o similar, simulado) que compare el resultado con los valores de referencia y marque las anomalías.</li>
+                        <li>Dashboard de "Estado de Muestras" (En Recepción, En Análisis, Resultados Listos).</li>
+                    </ul>
+
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Entregables Técnicos ObligatorIOS</h3>
+                    <ul class="list-disc list-inside space-y-2 pl-4 text-base-700/90">
+                        <li><b>Diseño:</b> Diagrama de Clases completo y Diagrama de Componentes.</li>
+                        <li><b>Arquitectura:</b> Implementación estricta de 3 capas (Presentación: WinForms, Lógica: C#, Datos: C# con MySQL).</li>
+                        <li><b>DLLs:</b> Generación de las bibliotecas de vínculos dinámicos (.dll) para la capa de Lógica y la capa de Acceso a Datos.</li>
+                        <li><b>Base de Datos:</b> Script SQL de creación de la base de datos MySQL (tablas, relaciones, vistas si es necesario).</li>
+                        <li><b>Ejecutable:</b> Entrega del archivo .exe funcional y el código fuente completo.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <!-- Proyecto 7 -->
+            <article class="bg-card rounded-lg shadow-lg overflow-hidden border border-gray-200/80 project-card-animate transition-all duration-300 hover:shadow-2xl hover:-translate-y-1" style="animation-delay: 0.35s;">
+                <div class="p-6 md:p-8">
+                    <span class="inline-block bg-primary-700 text-white text-sm font-semibold px-3 py-1 rounded-full mb-3">Proyecto 07</span>
+                    <h2 class="font-header text-3xl font-bold text-base-900 mb-4">
+                        Sistema de Trazabilidad de Cadena de Frío para Logística (ColdChain-Track)
+                    </h2>
+                    
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Contexto del Cliente</h3>
+                    <p class="mb-4 leading-relaxed">
+                        Una empresa que transporta productos farmacéuticos (vacunas) y alimentos perecibles necesita garantizar la cadena de frío. Sus camiones tienen sensores (simulados) que reportan la temperatura. Necesitan un sistema de escritorio que registre el "viaje" y alerte en tiempo real (simulado) si hay desviaciones de temperatura, generando un reporte de trazabilidad al final del viaje.
+                    </p>
+
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Requerimientos Clave</h3>
+                    <ul class="list-disc list-inside space-y-2 mb-4 pl-4 text-base-700/90">
+                        <li>Módulo de "Activos" (Camiones, Contenedores refrigerados) y "Sensores" (virtuales, asociados a un activo).</li>
+                        <li>Módulo de "Planes de Viaje" (ruta, conductor, activo, producto, rango de temp. permitido ej. 2°C-8°C).</li>
+                        <li>Módulo de "Telemetría" (simulación de entrada de datos de temperatura cada X minutos para un viaje activo).</li>
+                        <li>Dashboard de "Monitoreo" que muestre viajes activos y sus temperaturas actuales (con alertas visuales si salen de rango).</li>
+                        <li>Sistema de "Gestión de Alertas" (registro de cuándo salió de rango, quién atendió la alerta).</li>
+                        <li>Generación de "Reporte de Viaje" al finalizar, mostrando un historial de temperaturas y las alertas ocurridas.</li>
+                    </ul>
+
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Entregables Técnicos ObligatorIOS</h3>
+                    <ul class="list-disc list-inside space-y-2 pl-4 text-base-700/90">
+                        <li><b>Diseño:</b> Diagrama de Clases completo y Diagrama de Componentes.</li>
+                        <li><b>Arquitectura:</b> Implementación estricta de 3 capas (Presentación: WinForms, Lógica: C#, Datos: C# con MySQL).</li>
+                        <li><b>DLLs:</b> Generación de las bibliotecas de vínculos dinámicos (.dll) para la capa de Lógica y la capa de Acceso a Datos.</li>
+                        <li><b>Base de Datos:</b> Script SQL de creación de la base de datos MySQL (tablas, relaciones, vistas si es necesario).</li>
+                        <li><b>Ejecutable:</b> Entrega del archivo .exe funcional y el código fuente completo.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <!-- Proyecto 8 -->
+            <article class="bg-card rounded-lg shadow-lg overflow-hidden border border-gray-200/80 project-card-animate transition-all duration-300 hover:shadow-2xl hover:-translate-y-1" style="animation-delay: 0.4s;">
+                <div class="p-6 md:p-8">
+                    <span class="inline-block bg-primary-700 text-white text-sm font-semibold px-3 py-1 rounded-full mb-3">Proyecto 08</span>
+                    <h2 class="font-header text-3xl font-bold text-base-900 mb-4">
+                        Sistema de Evaluación de Desempeño y Matriz de Talento (TalentMatrix)
+                    </h2>
+                    
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Contexto del Cliente</h3>
+                    <p class="mb-4 leading-relaxed">
+                        Un departamento de RRHH quiere automatizar su evaluación de desempeño anual. Quieren que los gerentes evalúen a sus empleados en base a "Competencias" (Liderazgo, Trabajo en Equipo) y "Objetivos" (KPIs). El resultado final debe ubicar a cada empleado en una "Matriz de Talento de 9 Cajas" (9-Box grid) basado en su Desempeño (eje X) vs. Potencial (eje Y).
+                    </p>
+
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Requerimientos Clave</h3>
+                    <ul class="list-disc list-inside space-y-2 mb-4 pl-4 text-base-700/90">
+                        <li>Módulo de "Empleados" (con su gerente/evaluador asociado).</li>
+                        <li>Módulo de "Catálogo de Competencias" (ponderadas por Nivel/Cargo).</li>
+                        <li>Módulo de "Ciclos de Evaluación" (ej. "Evaluación 2025").</li>
+                        <li>Formulario de "Evaluación" donde el gerente califica (ej. 1-5) las competencias y el cumplimiento de objetivos.</li>
+                        <li>El sistema debe calcular un puntaje de "Desempeño" (eje X) y permitir al gerente asignar un puntaje de "Potencial" (eje Y).</li>
+                        <li>Vista gráfica (simulada con un `DataGridView` o `Panel` con etiquetas) de la Matriz de 9 Cajas, mostrando cuántos empleados hay en cada cuadrante (ej. "Alto Desempeño / Bajo Potencial").</li>
+                        <li>Generación de Planes de Desarrollo Individual (PDI) vinculados a los resultados.</li>
+                    </ul>
+
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Entregables Técnicos ObligatorIOS</h3>
+                    <ul class="list-disc list-inside space-y-2 pl-4 text-base-700/90">
+                        <li><b>Diseño:</b> Diagrama de Clases completo y Diagrama de Componentes.</li>
+                        <li><b>Arquitectura:</b> Implementación estricta de 3 capas (Presentación: WinForms, Lógica: C#, Datos: C# con MySQL).</li>
+                        <li><b>DLLs:</b> Generación de las bibliotecas de vínculos dinámicos (.dll) para la capa de Lógica y la capa de Acceso a Datos.</li>
+                        <li><b>Base de Datos:</b> Script SQL de creación de la base de datos MySQL (tablas, relaciones, vistas si es necesario).</li>
+                        <li><b>Ejecutable:</b> Entrega del archivo .exe funcional y el código fuente completo.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <!-- Proyecto 9 -->
+            <article class="bg-card rounded-lg shadow-lg overflow-hidden border border-gray-200/80 project-card-animate transition-all duration-300 hover:shadow-2xl hover:-translate-y-1" style="animation-delay: 0.45s;">
+                <div class="p-6 md:p-8">
+                    <span class="inline-block bg-primary-700 text-white text-sm font-semibold px-3 py-1 rounded-full mb-3">Proyecto 09</span>
+                    <h2 class="font-header text-3xl font-bold text-base-900 mb-4">
+                        Gestor de Microcréditos y Cartera de Cobranzas (MicroFin)
+                    </h2>
+                    
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Contexto del Cliente</h3>
+                    <p class="mb-4 leading-relaxed">
+                        Una pequeña cooperativa de ahorro y crédito (o una ONG que da microcréditos) maneja sus préstamos en Excel. Necesitan un sistema para gestionar la "Solicitud de Crédito", la "Aprobación", el "Desembolso" y, lo más importante, el "Plan de Pagos" (tabla de amortización) y el seguimiento de la cartera (morosidad).
+                    </p>
+
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Requerimientos Clave</h3>
+                    <ul class="list-disc list-inside space-y-2 mb-4 pl-4 text-base-700/90">
+                        <li>Módulo de "Clientes" (Socios/Prestatarios) con perfil de riesgo básico.</li>
+                        <li>Módulo de "Solicitudes de Crédito" (monto, plazo, tipo de interés - simple/compuesto, método de amortización - francés).</li>
+                        <li>Flujo de "Aprobación" de créditos (Solicitado, En Evaluación, Aprobado, Rechazado).</li>
+                        <li>Generación automática de "Tabla de Amortización" (plan de pagos) al aprobar y desembolsar.</li>
+                        <li>Módulo de "Registro de Pagos" (que afecta el saldo de la deuda y marca cuotas como pagadas/pagadas con mora).</li>
+                        <li>Cálculo de "Intereses Moratorios" sobre cuotas vencidas.</li>
+                        <li>Reporte de "Cartera Vencida" (quiénes están atrasados, días de mora, monto vencido).</li>
+                    </ul>
+
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Entregables Técnicos ObligatorIOS</h3>
+                    <ul class="list-disc list-inside space-y-2 pl-4 text-base-700/90">
+                        <li><b>Diseño:</b> Diagrama de Clases completo y Diagrama de Componentes.</li>
+                        <li><b>Arquitectura:</b> Implementación estricta de 3 capas (Presentación: WinForms, Lógica: C#, Datos: C# con MySQL).</li>
+                        <li><b>DLLs:</b> Generación de las bibliotecas de vínculos dinámicos (.dll) para la capa de Lógica y la capa de Acceso a Datos.</li>
+                        <li><b>Base de Datos:</b> Script SQL de creación de la base de datos MySQL (tablas, relaciones, vistas si es necesario).</li>
+                        <li><b>Ejecutable:</b> Entrega del archivo .exe funcional y el código fuente completo.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <!-- Proyecto 10 -->
+            <article class="bg-card rounded-lg shadow-lg overflow-hidden border border-gray-200/80 project-card-animate transition-all duration-300 hover:shadow-2xl hover:-translate-y-1" style="animation-delay: 0.5s;">
+                <div class="p-6 md:p-8">
+                    <span class="inline-block bg-primary-700 text-white text-sm font-semibold px-3 py-1 rounded-full mb-3">Proyecto 10</span>
+                    <h2 class="font-header text-3xl font-bold text-base-900 mb-4">
+                        Sistema de Gestión de Residuos Hospitalarios (BioHazard-Mgmt)
+                    </h2>
+                    
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Contexto del Cliente</h3>
+                    <p class="mb-4 leading-relaxed">
+                        Un hospital debe cumplir con normativas estrictas sobre el manejo de residuos peligrosos (biológicos, punzocortantes, químicos). Necesitan un sistema de escritorio para registrar la "generación" de residuos por área del hospital, su "almacenamiento" temporal y su "recolección" por parte de la empresa transportista autorizada, generando los manifiestos correspondientes.
+                    </p>
+
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Requerimientos Clave</h3>
+                    <ul class="list-disc list-inside space-y-2 mb-4 pl-4 text-base-700/90">
+                        <li>Módulo de "Áreas" del Hospital (ej. Quirófano, Laboratorio, Piso 3).</li>
+                        <li>Módulo de "Tipos de Residuos" (A1, A2, B, Comunes, etc.).</li>
+                        <li>Registro de "Generación de Residuos" (área, tipo, peso en Kg, fecha, N° de bolsa/contenedor) por parte del personal.</li>
+                        <li>Gestión de "Almacén Temporal" (control de stock de residuos por tipo, control de tiempo máximo de almacenamiento).</li>
+                        <li>Módulo de "Recolección" (Transportista, vehículo, fecha).</li>
+                        <li>Generación de "Manifiestos de Recolección" que detallen qué se está entregando (tipo y peso).</li>
+                        <li>Reportes de generación de residuos por área y por tipo para auditorías internas y de cumplimiento.</li>
+                    </ul>
+
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Entregables Técnicos ObligatorIOS</h3>
+                    <ul class="list-disc list-inside space-y-2 pl-4 text-base-700/90">
+                        <li><b>Diseño:</b> Diagrama de Clases completo y Diagrama de Componentes.</li>
+                        <li><b>Arquitectura:</b> Implementación estricta de 3 capas (Presentación: WinForms, Lógica: C#, Datos: C# con MySQL).</li>
+                        <li><b>DLLs:</b> Generación de las bibliotecas de vínculos dinámicos (.dll) para la capa de Lógica y la capa de Acceso a Datos.</li>
+                        <li><b>Base de Datos:</b> Script SQL de creación de la base de datos MySQL (tablas, relaciones, vistas si es necesario).</li>
+                        <li><b>Ejecutable:</b> Entrega del archivo .exe funcional y el código fuente completo.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <!-- Proyecto 11 -->
+            <article class="bg-card rounded-lg shadow-lg overflow-hidden border border-gray-200/80 project-card-animate transition-all duration-300 hover:shadow-2xl hover:-translate-y-1" style="animation-delay: 0.55s;">
+                <div class="p-6 md:p-8">
+                    <span class="inline-block bg-primary-700 text-white text-sm font-semibold px-3 py-1 rounded-full mb-3">Proyecto 11</span>
+                    <h2 class="font-header text-3xl font-bold text-base-900 mb-4">
+                        Gestión de Alquiler de Maquinaria Pesada (HeavyRent)
+                    </h2>
+                    
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Contexto del Cliente</h3>
+                    <p class="mb-4 leading-relaxed">
+                        Una empresa alquila maquinaria pesada (excavadoras, grúas) a constructoras. El cobro se basa en el "horómetro" (horas de uso) de la máquina. Necesitan un sistema para gestionar su inventario de máquinas, los contratos de alquiler, y registrar las horas de uso reportadas para generar la facturación.
+                    </p>
+
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Requerimientos Clave</h3>
+                    <ul class="list-disc list-inside space-y-2 mb-4 pl-4 text-base-700/90">
+                        <li>Módulo de "Inventario de Maquinaria" (ID, tipo, marca, modelo, horómetro actual).</li>
+                        <li>Módulo de "Clientes" (Constructoras).</li>
+                        <li>Módulo de "Contratos de Alquiler" (cliente, máquina, fecha inicio, fecha fin, precio por hora).</li>
+                        <li>Registro de "Reportes de Horómetro" (simulados, reportados por un supervisor de campo) que actualizan el horómetro de la máquina.</li>
+                        <li>Módulo de "Estado de Maquinaria" (Disponible, En Alquiler, En Mantenimiento).</li>
+                        <li>Generación de "Pre-facturas" que calculan (horómetro final - horómetro inicial) * precio por hora del contrato.</li>
+                        <li>Alertas de mantenimiento preventivo basado en horas de uso (ej. cada 250 horas).</li>
+                    </ul>
+
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Entregables Técnicos ObligatorIOS</h3>
+                    <ul class="list-disc list-inside space-y-2 pl-4 text-base-700/90">
+                        <li><b>Diseño:</b> Diagrama de Clases completo y Diagrama de Componentes.</li>
+                        <li><b>Arquitectura:</b> Implementación estricta de 3 capas (Presentación: WinForms, Lógica: C#, Datos: C# con MySQL).</li>
+                        <li><b>DLLs:</b> Generación de las bibliotecas de vínculos dinámicos (.dll) para la capa de Lógica y la capa de Acceso a Datos.</li>
+                        <li><b>Base de Datos:</b> Script SQL de creación de la base de datos MySQL (tablas, relaciones, vistas si es necesario).</li>
+                        <li><b>Ejecutable:</b> Entrega del archivo .exe funcional y el código fuente completo.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <!-- Proyecto 12 -->
+            <article class="bg-card rounded-lg shadow-lg overflow-hidden border border-gray-200/80 project-card-animate transition-all duration-300 hover:shadow-2xl hover:-translate-y-1" style="animation-delay: 0.6s;">
+                <div class="p-6 md:p-8">
+                    <span class="inline-block bg-primary-700 text-white text-sm font-semibold px-3 py-1 rounded-full mb-3">Proyecto 12</span>
+                    <h2 class="font-header text-3xl font-bold text-base-900 mb-4">
+                        Control de Inventario y Recetas para Restaurantes (RestoStock)
+                    </h2>
+                    
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Contexto del Cliente</h3>
+                    <p class="mb-4 leading-relaxed">
+                        Una cadena pequeña de 3 restaurantes necesita unificar el control de su inventario de ingredientes. El sistema debe permitir definir "recetas" (ej. "Lomo Saltado" usa 200g de Lomo, 100g de Papa, etc.) y descontar automáticamente el inventario de ingredientes cada vez que se registra la venta de un plato.
+                    </p>
+
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Requerimientos Clave</h3>
+                    <ul class="list-disc list-inside space-y-2 mb-4 pl-4 text-base-700/90">
+                        <li>Módulo de "Ingredientes" (stock centralizado, unidad de medida, costo).</li>
+                        <li>Módulo de "Productos" (Platos del menú, ej. "Lomo Saltado").</li>
+                        <li>Módulo de "Recetas" que vincule Productos con Ingredientes y sus cantidades (ej. 1 "Lomo Saltado" = 0.200 Kg "Lomo Fino", 0.100 Kg "Papa Amarilla").</li>
+                        <li>Módulo de "Ventas" (simulado, donde se registra "Se vendieron 5 Lomo Saltado en Sucursal 1").</li>
+                        <li>El sistema debe descontar automáticamente el stock de ingredientes basado en las ventas registradas y las recetas.</li>
+                        <li>Reporte de "Stock Crítico" (ingredientes por debajo del mínimo).</li>
+                        <li>Cálculo de "Costo de Plato" basado en los costos de los ingredientes de la receta.</li>
+                    </ul>
+
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Entregables Técnicos ObligatorIOS</h3>
+                    <ul class="list-disc list-inside space-y-2 pl-4 text-base-700/90">
+                        <li><b>Diseño:</b> Diagrama de Clases completo y Diagrama de Componentes.</li>
+                        <li><b>Arquitectura:</b> Implementación estricta de 3 capas (Presentación: WinForms, Lógica: C#, Datos: C# con MySQL).</li>
+                        <li><b>DLLs:</b> Generación de las bibliotecas de vínculos dinámicos (.dll) para la capa de Lógica y la capa de Acceso a Datos.</li>
+                        <li><b>Base de Datos:</b> Script SQL de creación de la base de datos MySQL (tablas, relaciones, vistas si es necesario).</li>
+                        <li><b>Ejecutable:</b> Entrega del archivo .exe funcional y el código fuente completo.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <!-- Proyecto 13 -->
+            <article class="bg-card rounded-lg shadow-lg overflow-hidden border border-gray-200/80 project-card-animate transition-all duration-300 hover:shadow-2xl hover:-translate-y-1" style="animation-delay: 0.65s;">
+                <div class="p-6 md:p-8">
+                    <span class="inline-block bg-primary-700 text-white text-sm font-semibold px-3 py-1 rounded-full mb-3">Proyecto 13</span>
+                    <h2 class="font-header text-3xl font-bold text-base-900 mb-4">
+                        Sistema de Mesa de Ayuda (HelpDesk) Interno (IT-Support)
+                    </h2>
+                    
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Contexto del Cliente</h3>
+                    <p class="mb-4 leading-relaxed">
+                        El departamento de TI de una corporación de 500 empleados recibe solicitudes de soporte (tickets) por teléfono y email, generando desorden. Necesitan un sistema de HelpDesk donde los empleados puedan registrar "tickets" y el equipo de TI pueda asignarlos, gestionarlos por prioridad y cerrarlos, midiendo tiempos de respuesta (SLA).
+                    </p>
+
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Requerimientos Clave</h3>
+                    <ul class="list-disc list-inside space-y-2 mb-4 pl-4 text-base-700/90">
+                        <li>Módulo de "Usuarios" con roles (Empleado, Agente de TI, Supervisor de TI).</li>
+                        <li>Formulario de "Creación de Ticket" (categoría: Hardware/Software/Red, prioridad: Baja/Media/Alta, descripción).</li>
+                        <li>Módulo de "Gestión de Tickets" para Agentes de TI (asignar ticket a un agente, cambiar estado: Abierto/En Proceso/Resuelto).</li>
+                        <li>Sistema de "Comentarios" o bitácora dentro de cada ticket.</li>
+                        <li>Cálculo de "SLA" (Tiempo de Primera Respuesta, Tiempo de Resolución).</li>
+                        <li>Dashboard para el Supervisor de TI (tickets abiertos por agente, tickets vencidos por SLA).</li>
+                        <li>Base de Conocimiento simple (FAQ) para que los empleados autogestionen problemas comunes.</li>
+                    </ul>
+
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Entregables Técnicos ObligatorIOS</h3>
+                    <ul class="list-disc list-inside space-y-2 pl-4 text-base-700/90">
+                        <li><b>Diseño:</b> Diagrama de Clases completo y Diagrama de Componentes.</li>
+                        <li><b>Arquitectura:</b> Implementación estricta de 3 capas (Presentación: WinForms, Lógica: C#, Datos: C# con MySQL).</li>
+                        <li><b>DLLs:</b> Generación de las bibliotecas de vínculos dinámicos (.dll) para la capa de Lógica y la capa de Acceso a Datos.</li>
+                        <li><b>Base de Datos:</b> Script SQL de creación de la base de datos MySQL (tablas, relaciones, vistas si es necesario).</li>
+                        <li><b>Ejecutable:</b> Entrega del archivo .exe funcional y el código fuente completo.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <!-- Proyecto 14 -->
+            <article class="bg-card rounded-lg shadow-lg overflow-hidden border border-gray-200/80 project-card-animate transition-all duration-300 hover:shadow-2xl hover:-translate-y-1" style="animation-delay: 0.7s;">
+                <div class="p-6 md:p-8">
+                    <span class="inline-block bg-primary-700 text-white text-sm font-semibold px-3 py-1 rounded-full mb-3">Proyecto 14</span>
+                    <h2 class="font-header text-3xl font-bold text-base-900 mb-4">
+                        Gestión de Membresías y Control de Acceso (GymAccess)
+                    </h2>
+                    
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Contexto del Cliente</h3>
+                    <p class="mb-4 leading-relaxed">
+                        Un gimnasio necesita un sistema para administrar a sus miembros. El sistema debe gestionar los "Planes" (Mensual, Anual), los "Pagos" y el "Control de Acceso". Se debe poder registrar la entrada de un miembro (simulando un lector de huella/QR) y validar si su membresía está activa y al día en sus pagos.
+                    </p>
+
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Requerimientos Clave</h3>
+                    <ul class="list-disc list-inside space-y-2 mb-4 pl-4 text-base-700/90">
+                        <li>Módulo de "Miembros" (datos personales, foto).</li>
+                        <li>Módulo de "Planes de Membresía" (nombre, duración en días, costo).</li>
+                        <li>Módulo de "Inscripciones" (vincular un Miembro a un Plan, generando una fecha de inicio y fin).</li>
+                        <li>Gestión de "Pagos" (registro de pagos de renovación).</li>
+                        <li>El sistema debe actualizar automáticamente el estado del miembro (Activo, Vencido) basado en las fechas de su plan y sus pagos.</li>
+                        <li>Módulo de "Check-In" (una pantalla donde se ingresa el ID del miembro y el sistema responde "ACCESO PERMITIDO" o "ACCESO DENEGADO (Membresía Vencida)").</li>
+                        <li>Reporte de miembros activos y reporte de pagos pendientes.</li>
+                    </ul>
+
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Entregables Técnicos ObligatorIOS</h3>
+                    <ul class="list-disc list-inside space-y-2 pl-4 text-base-700/90">
+                        <li><b>Diseño:</b> Diagrama de Clases completo y Diagrama de Componentes.</li>
+                        <li><b>Arquitectura:</b> Implementación estricta de 3 capas (Presentación: WinForms, Lógica: C#, Datos: C# con MySQL).</li>
+                        <li><b>DLLs:</b> Generación de las bibliotecas de vínculos dinámicos (.dll) para la capa de Lógica y la capa de Acceso a Datos.</li>
+                        <li><b>Base de Datos:</b> Script SQL de creación de la base de datos MySQL (tablas, relaciones, vistas si es necesario).</li>
+                        <li><b>Ejecutable:</b> Entrega del archivo .exe funcional y el código fuente completo.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <!-- Proyecto 15 -->
+            <article class="bg-card rounded-lg shadow-lg overflow-hidden border border-gray-200/80 project-card-animate transition-all duration-300 hover:shadow-2xl hover:-translate-y-1" style="animation-delay: 0.75s;">
+                <div class="p-6 md:p-8">
+                    <span class="inline-block bg-primary-700 text-white text-sm font-semibold px-3 py-1 rounded-full mb-3">Proyecto 15</span>
+                    <h2 class="font-header text-3xl font-bold text-base-900 mb-4">
+                        Sistema de Administración de Viñedos (VinoTrak)
+                    </h2>
+                    
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Contexto del Cliente</h3>
+                    <p class="mb-4 leading-relaxed">
+                        Un viñedo boutique necesita un sistema para administrar sus parcelas (lotes de uva). El sistema debe registrar la "variedad" (Malbec, Cabernet) en cada lote, las "labores" (poda, riego, fertilización) realizadas, y finalmente el control de la "vendimia" (cosecha), registrando el peso y nivel de azúcar (grados Brix) de la uva cosechada por lote.
+                    </p>
+
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Requerimientos Clave</h3>
+                    <ul class="list-disc list-inside space-y-2 mb-4 pl-4 text-base-700/90">
+                        <li>Módulo de "Parcelas/Lotes" (ID, hectáreas, variedad de uva plantada).</li>
+                        <li>Módulo de "Labores Agrícolas" (catálogo de labores: Poda, Riego, etc.).</li>
+                        <li>Registro de "Órdenes de Trabajo" (qué labor se hizo, en qué parcela, qué fecha, quién la realizó, insumos usados).</li>
+                        <li>Módulo de "Vendimia (Cosecha)" por parcela (registro de Kilos cosechados, Grados Brix medidos, fecha).</li>
+                        <li>Trazabilidad de la uva: vincular la uva cosechada al tanque de fermentación (simulado).</li>
+                        <li>Reportes de costo por hectárea (sumando labores e insumos) y reporte de rendimiento (Kg/Ha) por parcela.</li>
+                    </ul>
+
+                    <h3 class="font-header text-xl font-semibold text-secondary-600 mt-6 mb-3">Entregables Técnicos ObligatorIOS</h3>
+                    <ul class="list-disc list-inside space-y-2 pl-4 text-base-700/90">
+                        <li><b>Diseño:</b> Diagrama de Clases completo y Diagrama de Componentes.</li>
+                        <li><b>Arquitectura:</b> Implementación estricta de 3 capas (Presentación: WinForms, Lógica: C#, Datos: C# con MySQL).</li>
+                        <li><b>DLLs:</b> Generación de las bibliotecas de vínculos dinámicos (.dll) para la capa de Lógica y la capa de Acceso a Datos.</li>
+                        <li><b>Base de Datos:</b> Script SQL de creación de la base de datos MySQL (tablas, relaciones, vistas si es necesario).</li>
+                        <li><b>Ejecutable:</b> Entrega del archivo .exe funcional y el código fuente completo.</li>
+                    </ul>
+                </div>
+            </article>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="mt-12 pt-8 border-t border-gray-200/80 text-center">
+            <!-- Texto del pie de página en Beige/Topo (neutral-500) -->
+            <p class="font-header text-lg text-neutral-500">
+                Fin de la Asignación de Proyectos (15 en total)
+            </p>
+            <p class="text-base-700/70 mt-1">¡Mucho éxito a todos en su desarrollo!</p>
+        </footer>
+
+    </div>
+
+</body>
+</html>
