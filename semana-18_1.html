@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semana 18 - CODE ARCHITECT: THE DISTRIBUTED JOURNEY</title>
+    <!-- Incluyendo Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Incluyendo Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* CORRECCIÓN: Nueva paleta de colores más profesional */
+            --color-bg: #0a192f; /* Azul Marino Oscuro */
+            --color-primary-card: #172a45; /* Azul Marino Claro */
+            --color-secondary-border: #303C55; /* Azul Pizarra */
+            --color-primary-accent: #64ffda; /* Menta Brillante */
+            --color-secondary-accent: #f15bb5; /* Magenta (para glitch) */
+            --color-text-primary: #ccd6f6; /* Pizarra Claro (Texto principal) */
+            --color-text-secondary: #8892b0; /* Pizarra (Texto secundario) */
+            --color-correct: #64ffda;
+            --color-incorrect: #e63946;
+
+            --font-title: 'Exo 2', sans-serif;
+            --font-code: 'Fira Code', monospace;
+        }
+
+        /* --- Estructura y Animaciones Globales --- */
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font-code);
+            background-color: var(--color-bg);
+            color: var(--color-text-primary);
+            overflow-x: hidden;
+            /* CORRECCIÓN: Fondo más sutil con scanlines */
+            background-image: linear-gradient(rgba(23, 42, 69, 0.4) 1px, transparent 1px);
+            background-size: 1px 3px;
+        }
+
+        .hidden { display: none !important; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); box-shadow: 0 0 15px var(--color-primary-accent); } 50% { transform: scale(1.02); box-shadow: 0 0 25px var(--color-primary-accent); } }
+        @keyframes glitch { 2%,64%{ transform: translate(2px,0) skew(0deg); color: var(--color-secondary-accent); } 4%,60%{ transform: translate(-2px,0) skew(0deg); color: var(--color-primary-accent); } 62%{ transform: translate(0,0) skew(5deg); } }
+        .glitch { animation: glitch 1.5s linear infinite; }
+
+        /* --- Clases de Utilidad (Faltantes) --- */
+        .text-center { text-align: center; }
+        .mb-1 { margin-bottom: 0.25rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-8 { margin-bottom: 2rem; }
+        .mt-4 { margin-top: 1rem; }
+        .mt-8 { margin-top: 2rem; }
+        .text-2xl { font-size: 1.5rem; }
+        .text-3xl { font-size: 1.875rem; }
+        .text-9xl { font-size: 8rem; }
+        .font-bold { font-weight: 700; }
+        .uppercase { text-transform: uppercase; }
+        .relative { position: relative; }
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .justify-around { justify-content: space-around; }
+        .justify-center { justify-content: center; }
+        .items-center { align-items: center; }
+        .gap-4 { gap: 1rem; }
+        .w-full { width: 100%; }
+        .w-1-3 { width: 33.33%; }
+        .w-2-3 { width: 66.66%; }
+        .max-w-4xl { max-width: 56rem; }
+        .mx-auto { margin-left: auto; margin-right: auto; }
+
+        /* --- Estilos de Componentes --- */
+        .game-screen {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .title {
+            font-family: var(--font-title);
+            font-weight: 900;
+            font-size: clamp(2.5rem, 10vw, 6rem);
+            text-transform: uppercase;
+            color: var(--color-primary-accent);
+            text-shadow: 0 0 10px rgba(100, 255, 218, 0.3);
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: clamp(1rem, 4vw, 1.5rem);
+            color: var(--color-text-secondary);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .btn {
+            font-family: var(--font-title);
+            font-weight: 700;
+            background: transparent;
+            color: var(--color-primary-accent);
+            border: 2px solid var(--color-primary-accent);
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px var(--color-primary-accent) inset;
+        }
+        .btn:hover { 
+            background-color: var(--color-primary-accent); 
+            color: var(--color-bg); 
+            box-shadow: 0 0 20px var(--color-primary-accent); 
+        }
+        .btn-start { animation: pulse 2s infinite; }
+
+        .game-panel {
+            background: rgba(23, 42, 69, 0.8);
+            border: 1px solid var(--color-secondary-border);
+            backdrop-filter: blur(10px);
+            padding: 2.5rem;
+            width: 100%;
+            box-shadow: 0 10px 30px -15px rgba(0,0,0,0.7);
+            border-radius: 8px;
+        }
+        
+        /* Estilos específicos del juego */
+        .map-node {
+            width: 110px; height: 110px;
+            border: 2px solid var(--color-secondary-border);
+            border-radius: 50%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            cursor: pointer; transition: all 0.3s ease;
+            position: relative;
+            background: var(--color-primary-card);
+            color: var(--color-text-secondary);
+        }
+        .map-node.locked { filter: grayscale(1) brightness(0.5); cursor: not-allowed; border-color: #444; }
+        .map-node.completed { 
+            border-color: var(--color-primary-accent); 
+            box-shadow: 0 0 15px var(--color-primary-accent); 
+            color: var(--color-primary-accent); 
+            background: rgba(100, 255, 218, 0.1);
+        }
+        .map-node:not(.locked):hover { 
+            transform: scale(1.1); 
+            background-color: var(--color-secondary-border); 
+            color: var(--color-primary-accent);
+        }
+        .map-connector {
+            position: absolute;
+            height: 2px;
+            background: var(--color-secondary-border);
+            transform-origin: left center;
+        }
+
+        .quiz-option {
+            display: block; width: 100%; text-align: left;
+            background-color: transparent; 
+            border: 1px solid var(--color-secondary-border);
+            border-radius: 5px;
+            padding: 1rem; margin-bottom: 1rem; 
+            color: var(--color-text-primary);
+            cursor: pointer; transition: all 0.2s;
+            font-family: var(--font-code);
+            font-size: 1rem;
+        }
+        .quiz-option:hover:not(:disabled) { 
+            background-color: var(--color-secondary-border); 
+            color: var(--color-primary-accent); 
+            border-color: var(--color-primary-accent);
+        }
+        .quiz-option.correct { 
+            background-color: var(--color-correct); 
+            color: var(--color-bg); 
+            border-color: var(--color-correct); 
+            font-weight: 700;
+        }
+        .quiz-option.incorrect { 
+            background-color: var(--color-incorrect); 
+            color: var(--color-text-primary); 
+            border-color: var(--color-incorrect); 
+            font-weight: 700;
+        }
+        .quiz-option:disabled { cursor: not-allowed; opacity: 0.7; }
+
+        /* Drag and Drop styles */
+        .drop-zone { 
+            border: 2px dashed var(--color-secondary-border); 
+            min-height: 100px; 
+            padding: 1rem; 
+            transition: background-color 0.3s;
+            border-radius: 5px;
+        }
+        .drag-item { 
+            background: var(--color-primary-card); 
+            border: 1px solid var(--color-secondary-border); 
+            padding: 0.5rem; margin: 0.5rem; 
+            cursor: grab; 
+            text-align: center; 
+            border-radius: 5px; 
+            color: var(--color-text-primary);
+        }
+        .drag-item:active { cursor: grabbing; }
+        .drop-zone.over { 
+            background-color: rgba(100, 255, 218, 0.1); 
+            border-color: var(--color-primary-accent);
+        }
+        
+        .final-dedication {
+            margin-top: 3rem;
+            font-size: 1.5rem;
+            color: var(--color-primary-accent);
+            text-shadow: 0 0 10px var(--color-primary-accent);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Pantalla de Inicio -->
+    <div id="start-screen" class="game-screen">
+        <h1 class="title glitch">CODE ARCHITECT</h1>
+        <p class="subtitle">THE DISTRIBUTED JOURNEY</p>
+        <button id="start-btn" class="btn btn-start">INICIAR MISIÓN</button>
+    </div>
+
+    <!-- Mapa de Misión -->
+    <div id="map-screen" class="game-screen hidden">
+        <div class="container text-center">
+            <h2 class="text-3xl font-bold uppercase mb-2" style="font-family: var(--font-title);">Mapa de la Misión</h2>
+            <p class="mb-8 subtitle">Completa cada nodo para desbloquear el siguiente y construir el sistema.</p>
+            <div class="relative flex justify-around items-center w-full max-w-4xl mx-auto">
+                <!-- Conectores -->
+                <div class="map-connector" style="width: 20%; left: 15%; top: 50%;"></div>
+                <div class="map-connector" style="width: 20%; left: 40%; top: 50%;"></div>
+                <div class="map-connector" style="width: 20%; left: 65%; top: 50%;"></div>
+                
+                <!-- Nodos -->
+                <div id="node-1" class="map-node" data-node="1"><i class="fas fa-desktop text-3xl mb-1"></i><span>Fundación</span></div>
+                <div id="node-2" class="map-node locked" data-node="2"><i class="fas fa-plug text-3xl mb-1"></i><span>Conexión</span></div>
+                <div id="node-3" class="map-node locked" data-node="3"><i class="fas fa-sitemap text-3xl mb-1"></i><span>Arquitectura</span></div>
+                <div id="node-4" class="map-node locked" data-node="4"><i class="fas fa-cogs text-3xl mb-1"></i><span>Ensamblaje</span></div>
+                <div id="node-5" class="map-node locked" data-node="5"><i class="fas fa-rocket text-3xl mb-1"></i><span>Lanzamiento</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pantalla de Nodos (Contenido dinámico) -->
+    <div id="node-screen" class="game-screen hidden">
+        <div class="container">
+            <div id="node-content" class="game-panel">
+                <!-- El contenido del desafío se inyectará aquí -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Pantalla Final -->
+    <div id="final-screen" class="game-screen hidden">
+        <h1 class="title glitch">MISIÓN CUMPLIDA</h1>
+        <i class="fas fa-trophy text-9xl my-8" style="color: var(--color-primary-accent); filter: drop-shadow(0 0 20px var(--color-primary-accent));"></i>
+        <p class="subtitle">¡Has construido y desplegado el sistema con éxito! <br> Tu viaje como Arquitecto de Código ha sido completado.</p>
+        <p class="final-dedication">Un proyecto formativo del <br> DOC. JUAN ESLÍ LOAYZA MÁRQUEZ</p>
+        <button id="restart-btn" class="btn mt-8">Jugar de Nuevo</button>
+    </div>
+
+    <script>
+        // --- Game State ---
+        const gameState = {
+            currentNode: 0,
+            completedNodes: [],
+        };
+
+        // --- DOM Elements ---
+        const screens = {
+            start: document.getElementById('start-screen'),
+            map: document.getElementById('map-screen'),
+            node: document.getElementById('node-screen'),
+            final: document.getElementById('final-screen'),
+        };
+        const nodeContentEl = document.getElementById('node-content');
+
+        // --- Game Data (HTML con data-attributes para los quizzes) ---
+        const gameData = {
+            1: {
+                title: "NODO 1: La Fundación (UI y Datos en Memoria)",
+                challenge: `
+                    <p class="mb-4">El cliente necesita una interfaz para gestionar 'Agentes'. Arrastra los controles necesarios para crear, listar y mostrar detalles de un agente (ID, Nombre, Nivel).</p>
+                    <div class="flex gap-4">
+                        <div class="w-1-3">
+                            <h3 class="font-bold text-center mb-2">Controles Disponibles</h3>
+                            <div id="drag-source">
+                                <div class="drag-item" draggable="true" data-control="TextBox">TextBox (Entrada de texto)</div>
+                                <div class="drag-item" draggable="true" data-control="Button">Button (Acción)</div>
+                                <div class="drag-item" draggable="true" data-control="ListBox">ListBox (Lista Simple)</div>
+                                <div class="drag-item" draggable="true" data-control="DataGridView">DataGridView (Tabla)</div>
+                            </div>
+                        </div>
+                        <div class="w-2-3">
+                             <h3 class="font-bold text-center mb-2">Panel de Diseño</h3>
+                             <div id="drop-target" class="drop-zone"></div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button class="btn" onclick="checkNode1()">Verificar Diseño</button>
+                    </div>
+                `,
+            },
+            2: {
+                 title: "NODO 2: La Conexión (ADO.NET y SQL)",
+                 challenge: `
+                    <p class="mb-4">¡Alerta de seguridad! El siguiente código es vulnerable a Inyección SQL. Elige la opción que representa una consulta parametrizada segura.</p>
+                    <div style="background: #000; padding: 1rem; margin-bottom: 1rem; border-radius: 5px; border: 1px solid var(--color-secondary-border);">
+                        <code>string query = "SELECT * FROM agents WHERE name = '" + txtName.Text + "';";</code>
+                    </div>
+                    <div id="quiz-options">
+                        <button class="quiz-option" data-is-correct="false">A) <code>string query = "SELECT * FROM agents WHERE name = '" + Sanitize(txtName.Text) + "';";</code></button>
+                        <button class="quiz-option" data-is-correct="true">B) <code>string query = "SELECT * FROM agents WHERE name = @name;"; cmd.Parameters.AddWithValue("@name", txtName.Text);</code></button>
+                        <button class="quiz-option" data-is-correct="false">C) <code>string query = "EXEC sp_GetAgentByName '" + txtName.Text + "';";</code></button>
+                    </div>
+                 `,
+            },
+            3: {
+                title: "NODO 3: La Arquitectura (POO y UML)",
+                challenge: `
+                    <p class="mb-4">El sistema necesita una arquitectura limpia. Arrastra las responsabilidades a su capa correcta para desacoplar el sistema.</p>
+                     <div class="flex gap-4">
+                        <div class="w-1-3">
+                            <h3 class="font-bold text-center mb-2">Responsabilidades</h3>
+                            <div id="drag-source">
+                                <div class="drag-item" draggable="true" data-layer="UI">Mostrar MessageBox de error</div>
+                                <div class="drag-item" draggable="true" data-layer="BLL">if (nivel > 10) { ... }</div>
+                                <div class="drag-item" draggable="true" data-layer="DAL">connection.Open();</div>
+                            </div>
+                        </div>
+                        <div class="w-2-3">
+                             <h3 class="font-bold text-center mb-2">Capas Arquitectónicas</h3>
+                             <div class="drop-zone mb-2" data-target="UI"><p>UI (Presentación)</p></div>
+                             <div class="drop-zone mb-2" data-target="BLL"><p>BLL (Lógica de Negocio)</p></div>
+                             <div class="drop-zone" data-target="DAL"><p>DAL (Acceso a Datos)</p></div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button class="btn" onclick="checkNode3()">Verificar Arquitectura</button>
+                    </div>
+                `,
+            },
+            4: {
+                 title: "NODO 4: El Ensamblaje (DLLs)",
+                 challenge: `
+                    <p class="mb-4">Has compilado tu lógica en una DLL llamada 'BusinessLogic.dll'. ¿Cómo la utilizas en tu proyecto de Interfaz de Usuario (UI)?</p>
+                    <div id="quiz-options">
+                        <button class="quiz-option" data-is-correct="false">A) Copiando y pegando el código fuente de la BLL en el proyecto UI.</button>
+                        <button class="quiz-option" data-is-correct="false">B) Usando la directiva '#include "BusinessLogic.dll"' al inicio del formulario.</button>
+                        <button class="quiz-option" data-is-correct="true">C) Agregando una referencia al proyecto BLL (o al archivo DLL) en el proyecto UI.</button>
+                    </div>
+                 `,
+            },
+            5: {
+                title: "NODO 5: Lanzamiento (Revisión Final)",
+                challenge: `
+                    <p class="mb-4">Para asegurar que una conexión a la base de datos siempre se cierre, incluso si ocurre un error, ¿en qué bloque de un 'try-catch' debería ir el método <code>connection.Close()</code>?</p>
+                     <div id="quiz-options">
+                        <button class="quiz-option" data-is-correct="false">A) En el bloque 'try'.</button>
+                        <button class="quiz-option" data-is-correct="false">B) En el bloque 'catch'.</button>
+                        <button class="quiz-option" data-is-correct="true">C) En el bloque 'finally'. (O mejor aún, usando un bloque 'using').</button>
+                    </div>
+                `,
+            }
+        };
+
+        // --- Game Logic ---
+        function showScreen(screenName) {
+            Object.values(screens).forEach(s => s.classList.add('hidden'));
+            screens[screenName].classList.remove('hidden');
+        }
+
+        function startGame() {
+            gameState.currentNode = 0;
+            gameState.completedNodes = [];
+            updateMap();
+            showScreen('map');
+        }
+
+        function updateMap() {
+            for (let i = 1; i <= 5; i++) {
+                const nodeEl = document.getElementById(`node-${i}`);
+                nodeEl.classList.remove('completed', 'locked');
+                
+                if (gameState.completedNodes.includes(i)) {
+                    nodeEl.classList.add('completed');
+                } else if (i > gameState.completedNodes.length + 1) {
+                    nodeEl.classList.add('locked');
+                }
+            }
+        }
+        
+        function selectNode(nodeId) {
+            if (document.getElementById(`node-${nodeId}`).classList.contains('locked')) return;
+            gameState.currentNode = nodeId;
+            const nodeData = gameData[nodeId];
+            nodeContentEl.innerHTML = `<h2 class="text-2xl font-bold mb-4 text-center" style="font-family: var(--font-title); color: var(--color-primary-accent);">${nodeData.title}</h2>${nodeData.challenge}`;
+            showScreen('node');
+
+            if (nodeId === 1 || nodeId === 3) {
+                 setupDragDrop();
+            }
+        }
+        
+        function completeNode(nodeId) {
+            if (!gameState.completedNodes.includes(nodeId)) {
+                gameState.completedNodes.push(nodeId);
+            }
+            alert(`¡NODO ${nodeId} COMPLETADO! Conexión estabilizada.`);
+            
+            if (gameState.completedNodes.length === 5) {
+                showScreen('final');
+            } else {
+                updateMap();
+                showScreen('map');
+            }
+        }
+        
+        // --- Drag & Drop Logic ---
+        let draggedItem = null;
+        function setupDragDrop() {
+            const draggables = document.querySelectorAll('.drag-item');
+            const dropzones = document.querySelectorAll('.drop-zone');
+
+            draggables.forEach(item => {
+                item.addEventListener('dragstart', (e) => { 
+                    draggedItem = e.target;
+                    setTimeout(() => e.target.style.opacity = '0.5', 0);
+                });
+                item.addEventListener('dragend', () => {
+                    draggedItem.style.opacity = '1';
+                    draggedItem = null;
+                });
+            });
+            dropzones.forEach(zone => {
+                zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('over'); });
+                zone.addEventListener('dragleave', () => zone.classList.remove('over'));
+                zone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    zone.classList.remove('over');
+                    if (draggedItem) zone.appendChild(draggedItem);
+                });
+            });
+        }
+        
+        // --- Node Checkers ---
+        function checkNode1() {
+            const dropTarget = document.getElementById('drop-target');
+            const controls = new Set();
+            dropTarget.querySelectorAll('.drag-item').forEach(item => controls.add(item.dataset.control));
+            if (controls.has('TextBox') && controls.has('Button') && controls.has('DataGridView')) {
+                completeNode(1);
+            } else {
+                alert('Diseño incorrecto. Faltan controles esenciales para el CRUD (TextBox, Button, DataGridView).');
+            }
+        }
+
+        function checkNode3() {
+            const zones = document.querySelectorAll('.drop-zone');
+            let isCorrect = true;
+            zones.forEach(zone => {
+                const items = zone.querySelectorAll('.drag-item');
+                // Verifica que cada zona tenga exactamente un item y que sea el correcto
+                if (items.length !== 1 || items[0].dataset.layer !== zone.dataset.target) {
+                    isCorrect = false;
+                }
+            });
+            if(isCorrect) completeNode(3);
+            else alert('Arquitectura incorrecta. Revisa la responsabilidad de cada capa.');
+        }
+
+        // --- Event Listeners ---
+        document.getElementById('start-btn').addEventListener('click', startGame);
+        document.getElementById('restart-btn').addEventListener('click', () => showScreen('start'));
+        
+        // Listener para el mapa
+        document.querySelectorAll('.map-node').forEach(node => {
+            node.addEventListener('click', () => selectNode(parseInt(node.dataset.node)));
+        });
+        
+        // CORRECCIÓN: Delegación de eventos para todos los quizzes (Nodos 2, 4, 5)
+        nodeContentEl.addEventListener('click', function(e) {
+            const option = e.target.closest('.quiz-option');
+            
+            // Si el clic no fue en un botón de opción, no hacer nada.
+            if (!option) return; 
+
+            // Deshabilitar todas las opciones para prevenir clics múltiples
+            nodeContentEl.querySelectorAll('.quiz-option').forEach(el => el.disabled = true);
+            
+            const isCorrect = option.dataset.isCorrect === 'true';
+            
+            // Aplicar clase visual
+            option.classList.add(isCorrect ? 'correct' : 'incorrect');
+            
+            // Si es correcto, avanzar al siguiente nodo
+            if (isCorrect) {
+                setTimeout(() => completeNode(gameState.currentNode), 1200);
+            } else {
+                 // Opcional: si es incorrecto, reintentar
+                 setTimeout(() => {
+                    alert("Respuesta incorrecta. Inténtalo de nuevo.");
+                    selectNode(gameState.currentNode); // Recargar el nodo
+                 }, 1200);
+            }
+        });
+
+    </script>
+</body>
+</html>
